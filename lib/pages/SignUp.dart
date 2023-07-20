@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highschoolhub/globalInfo.dart';
+import 'package:highschoolhub/models/user.dart';
 import 'package:highschoolhub/pages/SignUpScreen/AccountInfo.dart';
 import 'package:highschoolhub/pages/SignUpScreen/Club.dart';
 import 'package:highschoolhub/pages/SignUpScreen/EducationInfo.dart';
 import 'package:highschoolhub/pages/SignUpScreen/SkillSpecifier.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
-
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -20,7 +20,9 @@ class _SignUpScreenState extends State<SignUpScreen> with TickerProviderStateMix
   List<Color> darkColorList = [darkblue, darkPurple, darkOrange, darkGreen];
   List<bool> pageCompleted = [true, true, true, true];
   late TabController _tabController;
-
+  bool loadingState = false;
+  bool keyboardUp = false;
+  void setLoadingState() => setState(() => loadingState = loadingState == false);
   void initState(){
     _tabController = TabController(length : 4, vsync: this);
     _tabController.addListener(() {
@@ -33,157 +35,172 @@ class _SignUpScreenState extends State<SignUpScreen> with TickerProviderStateMix
 
   int currentScreen = 0;
   Widget build(BuildContext context) {
+    keyboardUp = MediaQuery.of(context).viewInsets.bottom != 0;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    List arguments = ModalRoute.of(context)!.settings.arguments as List;
+    AppUser currentUser = arguments[0];
     return Scaffold(
-        body: Container(
-      height: height,
-      width: width,
-      color: backgroundColor,
-      child: Stack(
-        children: [
-          Opacity(
-            opacity: 0.5,
-            child: SizedBox(
+        body: SingleChildScrollView(
+          physics: keyboardUp ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
+          child: Container(
               height: height,
               width: width,
-              child: Image.asset(
-                "assets/images/backdrop.png",
-                fit: BoxFit.cover,
+              color: backgroundColor,
+              child: Stack(
+          children: [
+            Opacity(
+              opacity: 0.5,
+              child: SizedBox(
+                height: height,
+                width: width,
+                child: Image.asset(
+                  "assets/images/backdrop.png",
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            child: Container(
-              width: width,
-              child: Column(
-                children: [
-                  Container(
-                    width: width,
-                    height: height * 0.0725,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        Container(
-                          height: height * 0.0725,
-                          width: height * 0.0725,
-                          child: FloatingActionButton(
-                              onPressed: () async {
-                                if (currentScreen != 0) {
-                                  currentScreen--;
-                                  _tabController.animateTo(currentScreen, duration: Duration(milliseconds: 300));
-                                }else{
-                                  try{
-                                    await Supabase.instance.client.auth.signOut();
-                                  }on Exception catch(_){};
-                                  Navigator.of(context).popAndPushNamed("authenticationScreen");
-                                }
-                                setState(() {});
-                              },
-                              elevation: 3,
-                              backgroundColor: currentScreen == 0 ? red:normalColorList[currentScreen],
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                side: BorderSide(
-                                    width: width * 0.0125,
-                                    color: currentScreen == 0 ? darkRed: darkColorList[currentScreen]),
+            SafeArea(
+              child: Container(
+                width: width,
+                child: Column(
+                  children: [
+                    Container(
+                      width: width,
+                      height: height * 0.0725,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                          Container(
+                            height: height * 0.0725,
+                            width: height * 0.0725,
+                            child: FloatingActionButton(
+                                onPressed: () async {
+                                  if (currentScreen != 0) {
+                                    currentScreen--;
+                                    _tabController.animateTo(currentScreen, duration: Duration(milliseconds: 300));
+                                  }else{
+                                    try{
+                                      await Supabase.instance.client.auth.signOut();
+                                    }on Exception catch(_){};
+                                    Navigator.of(context).popAndPushNamed("authenticationScreen");
+                                  }
+                                  setState(() {});
+                                },
+                                elevation: 3,
+                                backgroundColor: currentScreen == 0 ? red:normalColorList[currentScreen],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  side: BorderSide(
+                                      width: width * 0.0125,
+                                      color: currentScreen == 0 ? darkRed: darkColorList[currentScreen]),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                    currentScreen == 0 ? width * 0.042: width * 0.03,
+                                  ),
+                                  child: RotatedBox(
+                                    quarterTurns: 2,
+                                    child: Image.asset(currentScreen == 0 ? "assets/images/back.png" : "assets/images/arrow.png"),
+                                  ),
+                                )),
+                          ),
+                          Expanded(child: Container()),
+                          Container(
+                            height: height * 0.0725,
+                            child: FittedBox(
+                              child: Text(
+                                "Sign Up",
+                                style: GoogleFonts.fredoka(
+                                    fontWeight: FontWeight.w800,
+                                    color: normalColorList[currentScreen]),
                               ),
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                  currentScreen == 0 ? width * 0.042: width * 0.03,
-                                ),
-                                child: RotatedBox(
-                                  quarterTurns: 2,
-                                  child: Image.asset(currentScreen == 0 ? "assets/images/back.png" : "assets/images/arrow.png"),
-                                ),
-                              )),
-                        ),
-                        Expanded(child: Container()),
-                        Container(
-                          height: height * 0.0725,
-                          child: FittedBox(
-                            child: Text(
-                              "Sign Up",
-                              style: GoogleFonts.fredoka(
-                                  fontWeight: FontWeight.w800,
-                                  color: normalColorList[currentScreen]),
                             ),
                           ),
-                        ),
-                        Expanded(child: Container()),
-                        Container(
-                          height: height * 0.0725,
-                          width: height * 0.0725,
-                          child: FloatingActionButton(
-                              onPressed: () async {
-                                if (currentScreen != 3) {
-                                  currentScreen++;
-                                  _tabController.animateTo(currentScreen, duration: Duration(milliseconds: 300));
-                                }else{
-                                  
-                                }
-                                setState(() {});
-                              },
-                              elevation: 3,
-                              backgroundColor: normalColorList[currentScreen],
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                side: BorderSide(
-                                    width: width * 0.0125,
-                                    color: darkColorList[currentScreen]),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                  currentScreen == 3 ? width * 0.035: width * 0.03,
+                          Expanded(child: Container()),
+                          Container(
+                            height: height * 0.0725,
+                            width: height * 0.0725,
+                            child: FloatingActionButton(
+                                onPressed: () async {
+                                  if (currentScreen != 3) {
+                                    currentScreen++;
+                                    _tabController.animateTo(currentScreen, duration: Duration(milliseconds: 300));
+                                  }else{
+                                    
+                                  }
+                                  setState(() {});
+                                },
+                                elevation: 3,
+                                backgroundColor: normalColorList[currentScreen],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  side: BorderSide(
+                                      width: width * 0.0125,
+                                      color: darkColorList[currentScreen]),
                                 ),
-                                child: RotatedBox(
-                                  quarterTurns: 0,
-                                  child: Image.asset(currentScreen == 3 ? "assets/images/done.png" : "assets/images/arrow.png"),
-                                ),
-                              )),
-                        ),
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                      ],
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                    currentScreen == 3 ? width * 0.035: width * 0.03,
+                                  ),
+                                  child: RotatedBox(
+                                    quarterTurns: 0,
+                                    child: Image.asset(currentScreen == 3 ? "assets/images/done.png" : "assets/images/arrow.png"),
+                                  ),
+                                )),
+                          ),
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(child: Container(
-                    width: width, 
-                    child: TabBarView(
-                      controller: _tabController, 
-                      children: [
-                        AccountInfoScreen(), 
-                        EducationInfoScreen(), 
-                        SkillInfoScreen(), 
-                        ClubInfoScreen()
-                      ],
-                    ),
-                  )),
-                  Container(
-                    width: width * 0.9,
-                    height: height * 0.08,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                         NavigationIcon("assets/images/signUpScreenIcons/user.png", pageCompleted, normalColorList, currentScreen, 0),
-                  NavigationIcon("assets/images/signUpScreenIcons/school.png", pageCompleted, normalColorList, currentScreen, 1),
-                  NavigationIcon("assets/images/signUpScreenIcons/skills.png", pageCompleted, normalColorList, currentScreen, 2),
-                  NavigationIcon("assets/images/signUpScreenIcons/trophy.png", pageCompleted, normalColorList, currentScreen, 3),
-                      ],
-                    ),
-                  )
-                ],
+                    Expanded(child: Container(
+                      width: width, 
+                      child: TabBarView(
+                        controller: _tabController, 
+                        children: [
+                          AccountInfoScreen(currentUser, setLoadingState), 
+                          EducationInfoScreen(), 
+                          SkillInfoScreen(), 
+                          ClubInfoScreen()
+                        ],
+                      ),
+                    )),
+                    Container(
+                      width: width * 0.9,
+                      height: height * 0.08,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                           NavigationIcon("assets/images/signUpScreenIcons/user.png", pageCompleted, normalColorList, currentScreen, 0),
+                    NavigationIcon("assets/images/signUpScreenIcons/school.png", pageCompleted, normalColorList, currentScreen, 1),
+                    NavigationIcon("assets/images/signUpScreenIcons/skills.png", pageCompleted, normalColorList, currentScreen, 2),
+                    NavigationIcon("assets/images/signUpScreenIcons/trophy.png", pageCompleted, normalColorList, currentScreen, 3),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ), 
+            loadingState ? 
+            Container(
+              height: height,
+              width: width, 
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child : LoadingAnimationWidget.threeRotatingDots(color: normalColorList[currentScreen], size: height * 0.1)
+              ),
+            ):Container()
+          ],
               ),
             ),
-          )
-        ],
-      ),
-    ));
+        ));
   }
 }
 

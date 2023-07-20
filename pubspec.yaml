@@ -41,6 +41,13 @@ dependencies:
   lottie: ^2.4.0
   flutter_appauth: ^6.0.1
   crypto: ^3.0.3
+  image_picker: ^1.0.1
+  google_sign_in: ^6.1.4
+  firebase_core: ^2.15.0
+  firebase_auth: ^4.7.1
+  loading_animation_widget: ^1.2.0+4
+  flutter_keyboard_visibility: ^5.4.1
+  keyboard_visibility: ^0.5.2
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +84,7 @@ flutter:
     - assets/images/signUpScreenIcons/school.png
     - assets/images/back.png
     - assets/images/done.png
+    - assets/images/add-user.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "297787439752",
+    "project_id": "highschoolhub",
+    "storage_bucket": "highschoolhub.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297787439752:android:b9254a2ee0c9a4ec96bd3d",
+        "android_client_info": {
+          "package_name": "com.example.highschoolhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297787439752-fjpv0g0rg1r37g71ehdc305hsaetbufi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2hl51bcM-PeNfOrfq3GUemzyUDPb3A_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297787439752-fjpv0g0rg1r37g71ehdc305hsaetbufi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "297787439752-esu9hd570qdmbomshm34lq5odpmact7g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.highschoolhub"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,10 +5,9 @@ import 'package:highschoolhub/globalInfo.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highschoolhub/models/user.dart';
 import 'package:highschoolhub/pages/SignUp.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
@@ -20,10 +19,18 @@ class AuthenticationScreen extends StatefulWidget {
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
   @override
   late AppUser currentUser;
-  void initState(){
+  bool loadingState = false;
+  void initState() {
     currentUser = AppUser();
     super.initState();
   }
+
+  void setLoadingState() {
+    setState(() {
+      loadingState = loadingState == false;
+    });
+  }
+
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
@@ -60,50 +67,58 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           child: Row(
                             children: [
                               Container(
-                                height: height * 0.025,
-                                child: FittedBox(
-                                  fit: BoxFit.fitHeight, 
-                                  child: Text(
-                                    "Curate", 
-                                    style: GoogleFonts.rubik(
-                                      color: Color(0xff9966CC),
-                                      fontWeight: FontWeight.bold
+                                  height: height * 0.025,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: Text(
+                                      "Curate",
+                                      style: GoogleFonts.rubik(
+                                          color: Color(0xff9966CC),
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                )
+                                  )),
+                              SizedBox(
+                                width: width * 0.005,
                               ),
-                              SizedBox(width: width * 0.005,),
-                              CircleAvatar(radius: width * 0.005,backgroundColor: darkGreen,),
-                              SizedBox(width: width * 0.005,),
+                              CircleAvatar(
+                                radius: width * 0.005,
+                                backgroundColor: darkGreen,
+                              ),
+                              SizedBox(
+                                width: width * 0.005,
+                              ),
                               Container(
-                                height: height * 0.025,
-                                child: FittedBox(
-                                  fit: BoxFit.fitHeight, 
-                                  child: Text(
-                                    "Connect", 
-                                    style: GoogleFonts.rubik(
-                                      color: Color(0xffFF7518),
-                                      fontWeight: FontWeight.bold
+                                  height: height * 0.025,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: Text(
+                                      "Connect",
+                                      style: GoogleFonts.rubik(
+                                          color: Color(0xffFF7518),
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                )
+                                  )),
+                              SizedBox(
+                                width: width * 0.005,
                               ),
-                              SizedBox(width: width * 0.005,),
-                              CircleAvatar(radius: width * 0.005, backgroundColor: darkGreen,),
-                              SizedBox(width: width * 0.005,),
+                              CircleAvatar(
+                                radius: width * 0.005,
+                                backgroundColor: darkGreen,
+                              ),
+                              SizedBox(
+                                width: width * 0.005,
+                              ),
                               Container(
-                                height: height * 0.025,
-                                child: FittedBox(
-                                  fit: BoxFit.fitHeight, 
-                                  child: Text(
-                                    "Create", 
-                                    style: GoogleFonts.rubik(
-                                      color: Color(0xff448AFF),
-                                      fontWeight: FontWeight.bold
+                                  height: height * 0.025,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: Text(
+                                      "Create",
+                                      style: GoogleFonts.rubik(
+                                          color: Color(0xff448AFF),
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                )
-                              ),
+                                  )),
                             ],
                           ),
                         )
@@ -174,74 +189,74 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           )
                         ],
                       ),
-                    ), 
+                    ),
                     SizedBox(
                       height: height * 0.01,
                     ),
                     InkWell(
-                      onTap: ()async{
+                      onTap: () async {
                         int status = 0;
-                        try{
+                        setLoadingState();
+                        try {
                           status = await currentUser.authenticationUser();
-                        } on Exception catch(_){
+                          if (status == 2) {
+                            Navigator.of(context).popAndPushNamed(
+                                "SignUpScreen",
+                                arguments: [currentUser]);
+                          }
+                          print(status);
+                        } on Exception catch (_) {
                           status = -1;
-                        }
-                        if(status == 2){
-                          Navigator.of(context).popAndPushNamed(
-                           "SignUpScreen"
-                          );
                         }
                       },
                       child: Container(
                         width: width * 0.87,
                         height: height * 0.09,
                         decoration: BoxDecoration(
-                          color: blue, 
-                          border: Border.all(
-                            color: darkblue, 
-                            width: width * 0.015
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15)
-                          )
-                        ),
+                            color: blue,
+                            border: Border.all(
+                                color: darkblue, width: width * 0.015),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
                         child: Row(
                           children: [
                             SizedBox(
-                              width:(height * 0.09 - height * 0.015 - height * 0.045)/2,
+                              width: (height * 0.09 -
+                                      height * 0.015 -
+                                      height * 0.045) /
+                                  2,
                             ),
                             Container(
                               height: height * 0.045,
                               child: Image.asset(
-                                "assets/images/google.png", 
+                                "assets/images/google.png",
                                 fit: BoxFit.fitHeight,
                               ),
-                            ), 
+                            ),
                             SizedBox(
                               width: width * 0.037,
                             ),
                             Container(
                               height: height * 0.06,
                               child: FittedBox(
-                                fit: BoxFit.fitHeight, 
+                                fit: BoxFit.fitHeight,
                                 child: Text(
-                                  "Google Log In", 
+                                  "Google Log In",
                                   style: GoogleFonts.fredoka(
-                                    color: backgroundColor, 
-                                    fontWeight: FontWeight.w600
-                                  ),
+                                      color: backgroundColor,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
-                            ), 
+                            ),
                           ],
                         ),
                       ),
-                    ), 
+                    ),
                     SizedBox(
                       height: height * 0.013,
                     ),
                     Container(
-                      height: height * 0.03, 
+                      height: height * 0.03,
                       width: width,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -250,32 +265,34 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                             height: height * 0.006,
                             width: width * 0.3,
                             decoration: BoxDecoration(
-                              color: orange, 
-                              borderRadius: BorderRadius.all(Radius.circular(100))
-                            ),
-                          ), 
-                          SizedBox(width: width * 0.015,),
+                                color: orange,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100))),
+                          ),
+                          SizedBox(
+                            width: width * 0.015,
+                          ),
                           Container(
                             height: height * 0.03,
                             child: FittedBox(
-                              fit: BoxFit.fitHeight, 
+                              fit: BoxFit.fitHeight,
                               child: Text(
-                                "OR", 
+                                "OR",
                                 style: GoogleFonts.fredoka(
-                                  color: orange, 
-                                  fontWeight: FontWeight.w800
-                                ),
+                                    color: orange, fontWeight: FontWeight.w800),
                               ),
                             ),
                           ),
-                          SizedBox(width: width * 0.015,),
+                          SizedBox(
+                            width: width * 0.015,
+                          ),
                           Container(
                             height: height * 0.006,
                             width: width * 0.3,
                             decoration: BoxDecoration(
-                              color: orange, 
-                              borderRadius: BorderRadius.all(Radius.circular(100))
-                            ),
+                                color: orange,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100))),
                           )
                         ],
                       ),
@@ -284,63 +301,70 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       height: height * 0.013,
                     ),
                     InkWell(
-                      onTap: (){
-                        Navigator.of(context).popAndPushNamed("SignUpScreen");
+                      onTap: () {
+                        Navigator.of(context).popAndPushNamed("SignUpScreen",
+                            arguments: [currentUser]);
                       },
                       child: Container(
                         width: width * 0.87,
                         height: height * 0.09,
                         decoration: BoxDecoration(
-                          color: puprle, 
-                          border: Border.all(
-                            color: darkPurple, 
-                            width: width * 0.015
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15)
-                          )
-                        ),
+                            color: puprle,
+                            border: Border.all(
+                                color: darkPurple, width: width * 0.015),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
                         child: Row(
-                            children: [
-                              SizedBox(
-                                width:(height * 0.09 - height * 0.015 - height * 0.045)/2 + width * 0.01,
+                          children: [
+                            SizedBox(
+                              width: (height * 0.09 -
+                                          height * 0.015 -
+                                          height * 0.045) /
+                                      2 +
+                                  width * 0.01,
+                            ),
+                            Container(
+                              height: height * 0.045,
+                              child: Image.asset(
+                                "assets/images/signup.png",
+                                fit: BoxFit.fitHeight,
                               ),
-                              Container(
-                                height: height * 0.045,
-                                child: Image.asset(
-                                  "assets/images/signup.png", 
-                                  fit: BoxFit.fitHeight,
+                            ),
+                            SizedBox(
+                              width: width * 0.037,
+                            ),
+                            Container(
+                              height: height * 0.055,
+                              child: FittedBox(
+                                fit: BoxFit.fitHeight,
+                                child: Text(
+                                  "Create Account",
+                                  style: GoogleFonts.fredoka(
+                                      color: backgroundColor,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                              ), 
-                              SizedBox(
-                                width: width * 0.037,
                               ),
-                              Container(
-                                height: height * 0.055,
-                                child: FittedBox(
-                                  fit: BoxFit.fitHeight, 
-                                  child: Text(
-                                    "Create Account", 
-                                    style: GoogleFonts.fredoka(
-                                      color: backgroundColor, 
-                                      fontWeight: FontWeight.w600
-                                    ),
-                                  ),
-                                ),
-                              ), 
-                            ],
-                          ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
                 )),
-          )
+          ),
+          loadingState
+              ? Container(
+                  height: height,
+                  width: width,
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                      child: LoadingAnimationWidget.threeRotatingDots(
+                          color: mainColor, size: height * 0.1)),
+                )
+              : Container()
         ],
       ),
     );
   }
 }
 
-/*
-
- */
