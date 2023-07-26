@@ -21,7 +21,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   late AppUser currentUser;
   bool loadingState = false;
   void initState() {
-    currentUser = AppUser();
+    currentUser = AppUser(schools: []);
     super.initState();
   }
 

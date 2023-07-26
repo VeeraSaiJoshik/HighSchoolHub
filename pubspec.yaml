@@ -47,7 +47,7 @@ dependencies:
   firebase_auth: ^4.7.1
   loading_animation_widget: ^1.2.0+4
   flutter_keyboard_visibility: ^5.4.1
-  keyboard_visibility: ^0.5.2
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +75,8 @@ flutter:
   assets:
     - assets/images/backdrop.png
     - assets/animations/student.json
+    - assets/animations/loading.json
+    - assets/animations/empty.json
     - assets/images/google.png
     - assets/images/signup.png
     - assets/images/arrow.png
@@ -85,6 +87,8 @@ flutter:
     - assets/images/back.png
     - assets/images/done.png
     - assets/images/add-user.png
+    - assets/images/empty.png
+    - assets/images/add_school.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
