@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highschoolhub/globalInfo.dart';
 import 'package:highschoolhub/models/user.dart';
+import 'package:fl_geocoder/fl_geocoder.dart';
+
 
 class EducationInfoScreen extends StatefulWidget {
   @override
   Function toggleBlackScreen;
   Function showSearchSchool;
-  AppUser currentUser;
+  AppUser currentUser;  
   EducationInfoScreen(this.toggleBlackScreen, this.showSearchSchool, this.currentUser);
   State<EducationInfoScreen> createState() => _EducationInfoScreenState();
 }
 
 class _EducationInfoScreenState extends State<EducationInfoScreen> {
   @override
+  
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -39,7 +42,7 @@ class _EducationInfoScreenState extends State<EducationInfoScreen> {
             ),
           ),
           Container(
-            height: height * 0.6,
+            height: height * 0.65,
             width: width * 0.9,
             margin: EdgeInsets.symmetric(
                 horizontal: width * 0.05, vertical: height * 0.004),

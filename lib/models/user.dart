@@ -3,20 +3,21 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
+import 'package:flutter/material.dart';
 import 'package:highschoolhub/models/school.dart';
 import 'package:highschoolhub/main.dart';
 import 'package:highschoolhub/pages/SignUpScreen/AccountInfo.dart';
 import 'package:supabase/supabase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-
-
-import 'dart:io' show Platform;
+import 'package:image_downloader/image_downloader.dart';
+import 'dart:io' as io;
 
 class AppUser {
   String email;
   List<School> schools = [];
-  String image;
+  String firstName = "";
+  String lastName = "";
+  var image;
   DateOfBirth dateOfBirth = DateOfBirth(0, 0, Months.None);
   USStates userState = USStates.None;
   fa.User? userData;
@@ -33,8 +34,51 @@ class AppUser {
   }
   void setSchoolData(){
   }
-  void setGeneralData(){
-
+  void setGeneralData() async {
+    print("setting data");
+    io.File? imageFile;
+    if(image.runtimeType != String){
+      imageFile = image;
+      print("uploading");
+      await supaBase.storage.from('User-Profile').upload(
+        "public/" + email + ".png",
+        imageFile!,
+        fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+      );
+      image = supaBase
+        .storage
+        .from('User-Profile')
+        .getPublicUrl(email + '.png').replaceAll("User-Profile/", "User-Profile/public/");
+    }
+    int currentSchoolIndex = -1;
+    int highestGrade = 0;
+    for(int i = 0; i < schools.length; i++){
+      schools[i].attendedGrades.sort();
+      if(schools[i].attendedGrades[schools.length - 1] > highestGrade){
+        highestGrade =schools[i].attendedGrades[schools.length - 1];
+        currentSchoolIndex = i;
+      }
+    }
+    schools[currentSchoolIndex].currentSchool = true;
+    List<Map> schoolList = [];
+    for(School school in schools){
+      schoolList.add(school.getJson());
+    }
+    print("here");
+    await supaBase.from("user_auth_table").insert({
+      "email": email, 
+      "schools": schoolList, 
+      "image" : image, 
+      "state" : stateToString(userState), 
+      "first_name" : firstName, 
+      "last_name" : lastName,
+      "dateOfBirth" : {
+        "Month" : monthToString( dateOfBirth.month), 
+        "Year" : dateOfBirth.year,
+        "Day" : dateOfBirth.day,
+      }
+    });
+    print("done");
   }
   Future<int> authenticationUser() async {
     /**

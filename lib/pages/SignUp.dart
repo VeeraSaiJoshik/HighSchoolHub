@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:fl_geocoder/fl_geocoder.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highschoolhub/globalInfo.dart';
@@ -42,6 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen>
   bool loadingState = false;
   bool keyboardUp = false;
   bool showBlackScreen = false;
+  final geocoder = FlGeocoder(googleMpasApiKey);
   bool searchResultsLoading = false;
   Future<School> getFullSchoolData(String schoolName, String formattedName) async {
     String ogName = schoolName;
@@ -99,29 +103,25 @@ class _SignUpScreenState extends State<SignUpScreen>
     School finalAnswer = School(image: imageURL, name: formattedName);
     finalAnswer.grades = gradeRange.returnNumberInRange();
     actualLinkList = document.getElementsByTagName("a");
+    String tempAddress = "";
     for(dom.Element link in actualLinkList) {
       try{
         if(link.attributes["title"]!.contains("Map latest data")){
           List<dom.Element> elements = link.children;
           searchUrl = link.attributes["href"]!;
-          finalAnswer.address = (link.text);
+          tempAddress = link.text;
           print(link.children[0].outerHtml);
-          break;
+          
         }
       }catch(e){}
     } 
-    url = Uri.parse("https://nces.ed.gov" + searchUrl);
-    response = await http.get(url);
-    print(url);
-    document = parser.parse(response.body);
-    List<dom.Element> addressStrings = document.getElementsByClassName("address-data");
-    String finalStringAdress = "";
-    print(addressStrings);
-    for(dom.Element addy in addressStrings){
-      print(addy);
-      finalStringAdress = finalStringAdress + addy.text + "\n";
-    }
-    finalAnswer.address = finalStringAdress;
+    String apiKey = googleMpasApiKey;
+    final encodedAddress = Uri.encodeQueryComponent(tempAddress);
+    final url2 = 'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedAddress&key=$apiKey';
+    http.Response results =  await http.get(Uri.parse(url2));
+    
+    final data = json.decode(results.body);
+    finalAnswer.address.fromJson(data["results"][0]);
     return finalAnswer;
   }
   Future<List> getWebsiteData() async {
@@ -305,14 +305,19 @@ class _SignUpScreenState extends State<SignUpScreen>
                                 )),
                           ),
                           Expanded(child: Container()),
-                          Container(
-                            height: height * 0.0725,
-                            child: FittedBox(
-                              child: Text(
-                                "Sign Up",
-                                style: GoogleFonts.fredoka(
-                                    fontWeight: FontWeight.w800,
-                                    color: normalColorList[currentScreen]),
+                          InkWell(
+                            onTap: (){
+                              currentUser.setGeneralData();
+                            },
+                            child: Container(
+                              height: height * 0.0725,
+                              child: FittedBox(
+                                child: Text(
+                                  "Sign Up",
+                                  style: GoogleFonts.fredoka(
+                                      fontWeight: FontWeight.w800,
+                                      color: normalColorList[currentScreen]),
+                                ),
                               ),
                             ),
                           ),

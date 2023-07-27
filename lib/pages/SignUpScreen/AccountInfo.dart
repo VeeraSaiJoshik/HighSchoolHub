@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:highschoolhub/globalInfo.dart';
 import 'package:highschoolhub/models/user.dart';
 import 'package:image_picker/image_picker.dart';
@@ -341,6 +343,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
       if (image == null) return false;
       final imageTemp = File(image.path);
       setState(() => userProfile = imageTemp);
+      widget.currentUser.image = imageTemp;
       return true;
     } on PlatformException catch (e) {
       return false;
@@ -366,12 +369,24 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
   String imageUrl = "";
   void initState() {
     print(widget.currentUser.userData);
+    if(widget.currentUser.firstName != "") firstNameController.text = widget.currentUser.firstName;
+    if(widget.currentUser.lastName != "") lastNameController.text = widget.currentUser.lastName;
+    if(widget.currentUser.dateOfBirth.day.toString() != "") dayController.text = widget.currentUser.dateOfBirth.day.toString();
+    if(widget.currentUser.dateOfBirth.year.toString() != "") yearController.text = widget.currentUser.dateOfBirth.year.toString();
     if (widget.currentUser.userData != null &&
         widget.currentUser.userData!.photoURL != "" &&
         widget.currentUser.userData!.photoURL != null) {
+      widget.currentUser.image = widget.currentUser.userData!.photoURL!;
       imagePicked = true;
       imageUrl = widget.currentUser.userData!.photoURL!;
+      widget.currentUser.image = widget.currentUser.userData!.photoURL!;
     }
+    firstNameController.addListener(() {
+      widget.currentUser.firstName = firstNameController.text;
+    });
+    lastNameController.addListener(() {
+      widget.currentUser.lastName = lastNameController.text;
+    });
     dayController.addListener(() {
       try {
         if (dayController.text == "") {
@@ -540,14 +555,30 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                           InkWell(
                             onTap: () async {
                               widget.loadingScreen();
-                              await widget.currentUser.authenticationUser();
-                              if (widget.currentUser.userData != null &&
+                              int status = await widget.currentUser.authenticationUser();
+                              if(status == 2){
+                                await GoogleSignIn().signOut();
+                                // ignore: use_build_context_synchronously
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.error,
+                                  animType: AnimType.scale,
+                                  title: 'Account Exists',
+                                  desc: 'The google account you ahve connected already exists',
+                                  btnOkOnPress: () {},
+                                ).show();
+                              }else{
+                                if (widget.currentUser.userData != null &&
                                   widget.currentUser.userData!.photoURL != "" &&
-                                  widget.currentUser.userData!.photoURL !=
-                                      null) {
-                                imagePicked = true;
-                                imageUrl =
-                                    widget.currentUser.userData!.photoURL!;
+                                  widget.currentUser.userData!.photoURL != null) {
+                                    if(imagePicked = false){
+                                      widget.currentUser.image = widget.currentUser.userData!.photoURL!;
+                                    }
+                                    imagePicked = true;
+                                    imageUrl =
+                                        widget.currentUser.userData!.photoURL!;
+                                    widget.currentUser.image = widget.currentUser.userData!.photoURL!;
+                                  }
                               }
                               setState(() {});
                               widget.loadingScreen();
@@ -741,6 +772,7 @@ class _SignUpScreenTextFieldState extends State<SignUpScreenTextField> {
   @override
   bool tapped = false;
   void initState() {
+
     super.initState();
   }
 
@@ -893,7 +925,7 @@ class DateOfBirthPickerState extends State<DateOfBirthPicker> {
                     child: Text(
                       widget.insideText,
                       style: GoogleFonts.fredoka(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           color: widget.tec.text == ""
                               ? Colors.grey.shade400
                               : Colors.transparent,
@@ -1055,7 +1087,7 @@ class MonthPickerWidgetState extends State<MonthPickerWidget> {
                     child: Text(
                       widget.insideText != "State" ? widget.toStringFunction(widget.birthMonth)[1] : widget.toStringFunction(widget.birthMonth),
                       style: GoogleFonts.fredoka(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           color: widget.birthMonth != widget.noneEnum
                               ? widget.mainColor
                               : Colors.transparent,
