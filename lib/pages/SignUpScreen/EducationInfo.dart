@@ -116,7 +116,7 @@ class _EducationInfoScreenState extends State<EducationInfoScreen> {
                                           style: GoogleFonts.fredoka(
                                             color: backgroundColor,
                                             fontWeight: FontWeight.w600, 
-                                            fontSize: e.name.length <= 23 ? MediaQuery.of(context).textScaleFactor * 25:MediaQuery.of(context).textScaleFactor * 20, 
+                                            fontSize: e.name.length <= 20 ? MediaQuery.of(context).textScaleFactor * 25:MediaQuery.of(context).textScaleFactor * 20, 
                                             height: 1
                                           ),
                                         ),

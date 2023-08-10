@@ -51,6 +51,7 @@ dependencies:
   fl_geocoder: ^0.1.0+1
   image_downloader: ^0.31.0
   awesome_dialog: ^3.1.0
+  postgres: ^2.6.1
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
     - assets/animations/student.json
     - assets/animations/loading.json
     - assets/animations/empty.json
+    - assets/images/addSchool.png
     - assets/images/google.png
     - assets/images/signup.png
     - assets/images/arrow.png
@@ -92,6 +94,23 @@ flutter:
     - assets/images/add-user.png
     - assets/images/empty.png
     - assets/images/add_school.png
+    - assets/images/classImage/Art.png
+    - assets/images/classImage/Buisness.png
+    - assets/images/classImage/Computers.png
+    - assets/images/classImage/Electives.png
+    - assets/images/classImage/English.png
+    - assets/images/classImage/Language.png
+    - assets/images/classImage/Math.png
+    - assets/images/classImage/Math.png
+    - assets/images/classImage/Music.png
+    - assets/images/classImage/Science.png
+    - assets/images/classImage/Social_Studies.png
+    - assets/images/classImage/Sports.png
+    - assets/images/classImage/school.png
+    - assets/images/club.png
+    - assets/images/skills.png
+    - python/
+    - assets/images/clubIcons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

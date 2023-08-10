@@ -7,9 +7,12 @@ class School{
   String name;
   String image;
   bool currentSchool = false;
-  List<int> grades = [];
-  List<int> attendedGrades = [];
+  List grades = [];
+  List attendedGrades = [];
   School({this.name = "", this.image = "",});
+  String getDatabaseName(){
+    return name.replaceAll(" ", "");
+  }
   Map getJson(){
     return {
       "address" : this.address.toJson(), 
@@ -19,5 +22,13 @@ class School{
       "grades" : this.grades, 
       "attendedGrades" : this.attendedGrades, 
     };
+  }
+  void fromJson(Map json){
+    address.fromJson(json["address"]); 
+    name = json["name"];
+    image = json["image"];
+    currentSchool = json["currentSchool"];
+    attendedGrades = json["attendedGrades"];
+    grades = json["grades"];
   }
 }

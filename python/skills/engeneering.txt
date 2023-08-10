@@ -1,0 +1,100 @@
+Machining
+Welding
+Fabrication
+Calibration
+Simulation
+Kinetics
+Dynamics
+Material Testing
+Strength Analysis
+Circuitry
+Thermodynamics
+Aerodynamics
+Hydraulics
+Pneumatics
+Torque
+Friction
+Lubrication
+Reliability
+Finite Element Analysis
+Computational Fluid Dynamics
+Resilience
+Robustness
+Efficiency
+Ergonomics
+Schematics
+Prototyping
+Tolerance Analysis
+Heat Transfer
+Magnetic Fields
+Automation
+Control Systems
+Electromechanical Systems
+Signal Processing
+Machine Learning (Applied in Engineering)
+Testing Procedures
+CAD Modeling
+Vibration Control
+Structural Integrity
+Resilience
+Optimization
+Process Automation
+Reliability Engineering
+Kinematics
+Computational Mechanics
+Instrumentation
+Mechatronics
+Robotics
+Power Distribution
+Hazard Analysis
+Energy Efficiency
+Propulsion Systems
+R&D (Research and Development)
+Failure Analysis
+Fluid Dynamics
+Product Design
+Statistical Analysis (Applied in Engineering)
+Computational Modeling
+System Integration
+Prototyping
+Electromagnetic Theory
+Circuit Design
+Materials Science
+Electronics
+Structural Analysis
+Technical Documentation
+Root Cause Analysis
+Risk Assessment
+Rapid Prototyping
+CAD/CAM (Computer-Aided Design/Computer-Aided Manufacturing)
+Circuitry
+Manufacturing Processes
+Machine Design
+Systems Engineering
+Industrial Design
+Calibration
+Materials Selection
+Product Lifecycle Management
+Reliability Assessment
+Environmental Impact Assessment
+Computational Analysis
+Fluid Mechanics
+Heat Exchangers
+Machine Vision
+Process Control
+Sensor Integration
+Quality Control
+Data Analysis (Applied in Engineering)
+Communication Systems
+Computational Modeling
+System Dynamics
+Gear Mechanisms
+Kinetic Energy
+Computational Materials Science
+Structural Mechanics
+Resonance Analysis
+Transducer Design
+Rapid Prototyping
+Mechanical Systems
+Geometric Dimensioning and Tolerancing
+Reliability Modeling

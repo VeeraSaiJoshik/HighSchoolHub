@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:highschoolhub/globalInfo.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:highschoolhub/models/uploadDataToDatabase.dart';
 import 'package:highschoolhub/models/user.dart';
 import 'package:highschoolhub/pages/SignUp.dart';
+import 'package:highschoolhub/models/uplading.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -15,10 +17,10 @@ class AuthenticationScreen extends StatefulWidget {
   @override
   State<AuthenticationScreen> createState() => _AuthenticationScreenState();
 }
-
+late AppUser currentUser;
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
   @override
-  late AppUser currentUser;
+  
   bool loadingState = false;
   void initState() {
     currentUser = AppUser(schools: []);
@@ -57,10 +59,15 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        Lottie.asset(
-                          "assets/animations/student.json",
-                          height: height * 0.43,
-                          width: height * 0.43,
+                        InkWell(
+                          onTap: (){
+                            upploadClubData();
+                          },
+                          child: Lottie.asset(
+                            "assets/animations/student.json",
+                            height: height * 0.43,
+                            width: height * 0.43,
+                          ),
                         ),
                         Positioned(
                           bottom: height * 0.005,
