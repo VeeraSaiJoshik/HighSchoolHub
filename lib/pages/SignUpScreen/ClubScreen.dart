@@ -405,6 +405,46 @@ class _ClubInfoScreenState extends State<ClubInfoScreen> {
                           Container(
                             child: Column(
                               children: [
+                                currentUser.skills.length != 0?
+                                 Column(
+                                  children: currentUser.skills.map((e){
+                                    return Container(
+                                    width: width * 0.9,
+                                    height: height * 0.09,
+                                    margin: EdgeInsets.only(
+                                      bottom : height * 0.01
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: mainColor,
+                                        border: Border.all(
+                                            color: darkGreen,
+                                            width: width * 0.015),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15))),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                      
+                                        Container(
+                                          height: height * 0.05,
+                                          child: FittedBox(
+                                            fit: BoxFit.fitHeight,
+                                            child: Text(
+                                              e.className,
+                                              style: GoogleFonts.fredoka(
+                                                  color: backgroundColor,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                  }).toList(),
+                                ):Container(),
                                 InkWell(
                                   onTap: () {
                                     widget.toggleSkillSearchScreen();
@@ -452,10 +492,17 @@ class _ClubInfoScreenState extends State<ClubInfoScreen> {
                                     ),
                                   ),
                                 ),
+                                
+                                currentUser.skills.length != 0 ? 
+                               Container()
+                                :
                                 Container(
+                                  child: Column(
+                                    children: [
+                                      Container(
                                   height: height * 0.1,
                                 ),
-                                Container(
+                                      Container(
                                   height: height * 0.18,
                                   child:
                                       Image.asset("assets/images/skills.png"),
@@ -478,6 +525,10 @@ class _ClubInfoScreenState extends State<ClubInfoScreen> {
                                             17),
                                   ),
                                 )
+                                    ],
+                                  ),
+                                )
+                                
                               ],
                             ),
                           )

@@ -1,48 +1,42 @@
 import 'package:flutter/material.dart';
-
-enum SkillType {
-  Computer_Science, 
-  Mathematics,
-  Science, 
-  None
-}
-
-SkillType stringToEnum(String str){
-  if(str == "Computer_Science"){
-    return SkillType.Computer_Science;
-  }else if(str == "Mathematics"){
-    return SkillType.Mathematics;
-  }else if(str == "Science"){
-    return SkillType.Science;
-  }
-  return SkillType.None;
-}
-
-extension ParseToString on SkillType {
-  String toReadableString(){
-    return this.toString().replaceAll("_", " ");
-  }
-}
+import 'club.dart';
 
 class Skill {
-  String name = "";
-  SkillType type = SkillType.None;
-  Skill(this.name, this.type);
+  String className = "";
+  List<ClubType>? types = [];
+  double gScore = 0;
+  Skill({this.className = "", this.types, this.gScore = 0}){
+    types ??= [];
+  }
   //! JSON FUNCTIONS
   void fromJSON(Map data){
-    name = data["name"];
-    type = stringToEnum(data["type"]);
+    className = data["name"];
+    types = [];
+    for(var t in data["types"]){
+      types!.add(stringToEnum(t));
+    }
   }
   Map toJSON(){
+    List tempList = [];
+    for(ClubType t in types!){
+      tempList.add(t.toReadableString());
+    }
     return {
-      "name" : name,
-      "type" : type.toReadableString()
+      "name" : className,
+      "types" : tempList
     };
   }
-  //! Methods
-  Widget getImage(){
-    return Image.asset(
-      "Assets/skillsImage/" + type.toReadableString() + ".png"
-    );
+   double getCorpusRatingFromQuery(String query) {
+    double score = 0;
+    String currentQuery = "";
+    int i = 0;
+    for(String char in query.split('')){
+      currentQuery = currentQuery + char.toLowerCase();
+      if(className.toLowerCase().indexOf(currentQuery) != -1){
+        score += (1/(className.toLowerCase().indexOf(currentQuery) + 1)) * currentQuery.length* 1000;  
+      }
+    }
+    gScore = score;
+    return score;
   }
 }

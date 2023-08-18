@@ -239,6 +239,112 @@ String stateToString(USStates state) {
   return stateName;
 }
 
+USStates stringToState(String stateName) {
+  switch (stateName) {
+    case 'Alabama':
+      return USStates.Alabama;
+    case 'Alaska':
+      return USStates.Alaska;
+    case 'Arizona':
+      return USStates.Arizona;
+    case 'Arkansas':
+      return USStates.Arkansas;
+    case 'California':
+      return USStates.California;
+    case 'Colorado':
+      return USStates.Colorado;
+    case 'Connecticut':
+      return USStates.Connecticut;
+    case 'Delaware':
+      return USStates.Delaware;
+    case 'Florida':
+      return USStates.Florida;
+    case 'Georgia':
+      return USStates.Georgia;
+    case 'Hawaii':
+      return USStates.Hawaii;
+    case 'Idaho':
+      return USStates.Idaho;
+    case 'Illinois':
+      return USStates.Illinois;
+    case 'Indiana':
+      return USStates.Indiana;
+    case 'Iowa':
+      return USStates.Iowa;
+    case 'Kansas':
+      return USStates.Kansas;
+    case 'Kentucky':
+      return USStates.Kentucky;
+    case 'Louisiana':
+      return USStates.Louisiana;
+    case 'Maine':
+      return USStates.Maine;
+    case 'Maryland':
+      return USStates.Maryland;
+    case 'Massachusetts':
+      return USStates.Massachusetts;
+    case 'Michigan':
+      return USStates.Michigan;
+    case 'Minnesota':
+      return USStates.Minnesota;
+    case 'Mississippi':
+      return USStates.Mississippi;
+    case 'Missouri':
+      return USStates.Missouri;
+    case 'Montana':
+      return USStates.Montana;
+    case 'Nebraska':
+      return USStates.Nebraska;
+    case 'Nevada':
+      return USStates.Nevada;
+    case 'New Hampshire':
+      return USStates.New_Hampshire;
+    case 'New Jersey':
+      return USStates.New_Jersey;
+    case 'New Mexico':
+      return USStates.New_Mexico;
+    case 'New York':
+      return USStates.New_York;
+    case 'North Carolina':
+      return USStates.North_Carolina;
+    case 'North Dakota':
+      return USStates.North_Dakota;
+    case 'Ohio':
+      return USStates.Ohio;
+    case 'Oklahoma':
+      return USStates.Oklahoma;
+    case 'Oregon':
+      return USStates.Oregon;
+    case 'Pennsylvania':
+      return USStates.Pennsylvania;
+    case 'Rhode Island':
+      return USStates.Rhode_Island;
+    case 'South Carolina':
+      return USStates.South_Carolina;
+    case 'South Dakota':
+      return USStates.South_Dakota;
+    case 'Tennessee':
+      return USStates.Tennessee;
+    case 'Texas':
+      return USStates.Texas;
+    case 'Utah':
+      return USStates.Utah;
+    case 'Vermont':
+      return USStates.Vermont;
+    case 'Virginia':
+      return USStates.Virginia;
+    case 'Washington':
+      return USStates.Washington;
+    case 'West Virginia':
+      return USStates.West_Virginia;
+    case 'Wisconsin':
+      return USStates.Wisconsin;
+    case 'Wyoming':
+      return USStates.Wyoming;
+    default:
+      throw ArgumentError("Invalid state name: $stateName");
+  }
+}
 
 List<String> monthToString(Months month) {
   List<String> returnVal = [];
@@ -322,6 +428,36 @@ List<String> monthToString(Months month) {
   }
   return returnVal;
 }
+Months stringToMonth(String monthString) {
+  switch (monthString) {
+    case "January":
+      return Months.January;
+    case "February":
+      return Months.February;
+    case "March":
+      return Months.March;
+    case "April":
+      return Months.April;
+    case "May":
+      return Months.May;
+    case "June":
+      return Months.June;
+    case "July":
+      return Months.July;
+    case "August":
+      return Months.August;
+    case "September":
+      return Months.September;
+    case "October":
+      return Months.October;
+    case "November":
+      return Months.November;
+    case "December":
+      return Months.December;
+    default:
+      throw ArgumentError("Invalid month string: $monthString");
+  }
+}
 
 class AccountInfoScreen extends StatefulWidget {
   AppUser currentUser;
@@ -329,9 +465,10 @@ class AccountInfoScreen extends StatefulWidget {
   Function toggleBackScreen;
   Function showMonthPicker;
   Function showStatePicker;
+  Function showGradePicker;
   @override
   AccountInfoScreen(this.currentUser, this.loadingScreen, this.toggleBackScreen,
-      this.showMonthPicker, this.showStatePicker);
+      this.showMonthPicker, this.showStatePicker, this.showGradePicker);
   State<AccountInfoScreen> createState() => _AccountInfoScreenState();
 }
 
@@ -344,6 +481,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
       final imageTemp = File(image.path);
       setState(() => userProfile = imageTemp);
       widget.currentUser.image = imageTemp;
+      widget.currentUser.newImageChosen = true;
       return true;
     } on PlatformException catch (e) {
       return false;
@@ -375,7 +513,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
     if(widget.currentUser.dateOfBirth.year.toString() != "") yearController.text = widget.currentUser.dateOfBirth.year.toString();
     if (widget.currentUser.userData != null &&
         widget.currentUser.userData!.photoURL != "" &&
-        widget.currentUser.userData!.photoURL != null) {
+        widget.currentUser.userData!.photoURL != null ) {
       widget.currentUser.image = widget.currentUser.userData!.photoURL!;
       imagePicked = true;
       imageUrl = widget.currentUser.userData!.photoURL!;
@@ -556,7 +694,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                             onTap: () async {
                               widget.loadingScreen();
                               int status = await widget.currentUser.authenticationUser();
-                              if(status == 2){
+                              if(status == 1){
                                 await GoogleSignIn().signOut();
                                 // ignore: use_build_context_synchronously
                                 AwesomeDialog(
@@ -687,6 +825,29 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                                       widget.showStatePicker, 
                                       USStates.None, 
                                       stateToString),
+                          ),
+                          SizedBox(
+                            height: height * 0.023,
+                          ),
+
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: width * 0.06
+                            ),
+                            child: MonthPickerWidget(
+                                      height * 0.08,
+                                      width * 0.88,
+                                      blue,
+                                      darkblue,
+                                      "Grade",
+                                      width * 0.14,
+                                      widget.currentUser.currentGrade,
+                                      "Grade",
+                                      0,
+                                      widget.toggleBackScreen,
+                                      widget.showGradePicker, 
+                                      Grade.None, 
+                                      currentGradeToString),
                           ),
                           SizedBox(
                             height: height * 0.023,
@@ -1085,7 +1246,7 @@ class MonthPickerWidgetState extends State<MonthPickerWidget> {
                     padding: EdgeInsets.only(
                         left: width * 0.032, top: height * 0.008),
                     child: Text(
-                      widget.insideText != "State" ? widget.toStringFunction(widget.birthMonth)[1] : widget.toStringFunction(widget.birthMonth),
+                      widget.insideText != "State" && widget.insideText != "Grade"? widget.toStringFunction(widget.birthMonth)[1] : widget.toStringFunction(widget.birthMonth),
                       style: GoogleFonts.fredoka(
                           fontWeight: FontWeight.w600,
                           color: widget.birthMonth != widget.noneEnum

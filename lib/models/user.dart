@@ -17,48 +17,44 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'dart:io' as io;
 
-enum Grade{
-  Sophmore, 
-  Junior,
-  Senior, 
-  Freshman, 
-  None
-}
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-String currentGradeToString(Grade currentGrade){
-  if(currentGrade == Grade.Sophmore){
+enum Grade { Sophmore, Junior, Senior, Freshman, None }
+
+String currentGradeToString(Grade currentGrade) {
+  if (currentGrade == Grade.Sophmore) {
     return "Sophmore";
-  }else if(currentGrade == Grade.Junior){
+  } else if (currentGrade == Grade.Junior) {
     return "Junior";
-  }else if(currentGrade == Grade.Senior){
+  } else if (currentGrade == Grade.Senior) {
     return "Senior";
-  }else if(currentGrade == Grade.Freshman){
+  } else if (currentGrade == Grade.Freshman) {
     return "Freshman";
   }
   return "None";
 }
 
-int currentGradeToInt(Grade currentGrade){
-  if(currentGrade == Grade.Sophmore){
+int currentGradeToInt(Grade currentGrade) {
+  if (currentGrade == Grade.Sophmore) {
     return 10;
-  }else if(currentGrade == Grade.Junior){
+  } else if (currentGrade == Grade.Junior) {
     return 11;
-  }else if(currentGrade == Grade.Senior){
+  } else if (currentGrade == Grade.Senior) {
     return 12;
-  }else if(currentGrade == Grade.Freshman){
+  } else if (currentGrade == Grade.Freshman) {
     return 9;
   }
   return -1;
 }
 
-Grade currentGradeFromString(String gradeName){
-  if(gradeName == "Junior"){
+Grade currentGradeFromString(String gradeName) {
+  if (gradeName == "Junior") {
     return Grade.Junior;
-  }else if(gradeName == "Senior"){
+  } else if (gradeName == "Senior") {
     return Grade.Senior;
-  }else if(gradeName == "Freshman"){
+  } else if (gradeName == "Freshman") {
     return Grade.Freshman;
-  }else if(gradeName == "Sophmore"){
+  } else if (gradeName == "Sophmore") {
     return Grade.Sophmore;
   }
   return Grade.None;
@@ -72,13 +68,16 @@ class AppUser {
   List<Skill> skills = [];
   String firstName = "";
   String lastName = "";
+  bool newImageChosen = false;
+  bool imageAlreadyThere = false;
   var image;
+
   DateOfBirth dateOfBirth = DateOfBirth(0, 0, Months.None);
   USStates userState = USStates.None;
   Grade currentGrade;
   fa.User? userData;
-  void setAlData(
-      String email, School school, String image, DateOfBirth dateOfBirth, List<clubAppData> clubs, List<Skill> skills) {
+  void setAlData(String email, School school, String image,
+      DateOfBirth dateOfBirth, List<clubAppData> clubs, List<Skill> skills) {
     this.email = email;
     this.schools = schools;
     this.image = image;
@@ -91,37 +90,44 @@ class AppUser {
       {this.email = "",
       this.image = "",
       this.schools = const [],
-      this.userData, 
+      this.userData,
       this.currentGrade = Grade.None,
-      this.skills = const [], 
-      this.clubs = const []}){
-        if(this.skills.isEmpty) this.skills = [];
-        if(this.clubs.isEmpty) this.clubs = [];
-      }
+      this.skills = const [],
+      this.clubs = const []}) {
+    if (this.skills.isEmpty) this.skills = [];
+    if (this.clubs.isEmpty) this.clubs = [];
+  }
   String _generateRandomString() {
     final random = Random.secure();
     return base64Url.encode(List<int>.generate(16, (_) => random.nextInt(256)));
   }
-  void addClass(schoolClassDatabase takenClassInfo){
-    if(currentGrade != Grade.None) classes.add(schoolClassStudent(classInfo: takenClassInfo, taken: currentGrade));
-    else classes.add(schoolClassStudent(classInfo: takenClassInfo));
+
+  void addClass(schoolClassDatabase takenClassInfo) {
+    if (currentGrade != Grade.None)
+      classes.add(
+          schoolClassStudent(classInfo: takenClassInfo, taken: currentGrade));
+    else
+      classes.add(schoolClassStudent(classInfo: takenClassInfo));
   }
-  void removeClass(schoolClassStudent takenClassInfo){
+
+  void removeClass(schoolClassStudent takenClassInfo) {
     classes.remove(takenClassInfo);
   }
-  void changeGrade(Grade newGrade){
+
+  void changeGrade(Grade newGrade) {
     currentGrade = newGrade;
-    for(schoolClassStudent sClass in classes){
+    for (schoolClassStudent sClass in classes) {
       sClass.taken = currentGrade;
     }
   }
-  void setSchoolData() async {
+
+  Future<int> setSchoolData() async {
     print("started");
     int currentGrade = -1;
     for (School school in schools) {
       school.attendedGrades.sort();
       int tempGrade = school.attendedGrades[school.attendedGrades.length - 1];
-      if(tempGrade > currentGrade){
+      if (tempGrade > currentGrade) {
         currentGrade = tempGrade;
       }
     }
@@ -139,7 +145,7 @@ class AppUser {
         Map insertionMap = {
           "Student_Gmail": email,
           "Grade": grade,
-          "Year": currentAcademicYear - (currentGrade - grade), 
+          "Year": currentAcademicYear - (currentGrade - grade),
         };
         try {
           print("here ");
@@ -149,12 +155,12 @@ class AppUser {
       VALUES (@email, @grade, @year)
     ''';
 
-    // Execute the prepared statement with the provided parameters.
-    await databaseConnection.execute(insertQuery, substitutionValues: {
-      'email': email,
-      'grade': grade,
-      'year': currentAcademicYear - (currentGrade - grade),
-    });
+          // Execute the prepared statement with the provided parameters.
+          await databaseConnection.execute(insertQuery, substitutionValues: {
+            'email': email,
+            'grade': grade,
+            'year': currentAcademicYear - (currentGrade - grade),
+          });
         } on Exception catch (e) {
           print(e);
           await databaseConnection.execute('''      
@@ -171,31 +177,32 @@ class AppUser {
       VALUES (@email, @grade, @year)
     ''';
 
-    // Execute the prepared statement with the provided parameters.
-    await databaseConnection.execute(insertQuery, substitutionValues: {
-      'email': email,
-      'grade': grade,
-      'year': currentAcademicYear - (currentGrade - grade),
-    });
+          // Execute the prepared statement with the provided parameters.
+          await databaseConnection.execute(insertQuery, substitutionValues: {
+            'email': email,
+            'grade': grade,
+            'year': currentAcademicYear - (currentGrade - grade),
+          });
         }
       }
     }
+    return 1;
   }
 
-  void setCurrentSchool(){
-      int currentSchoolIndex = -1;
-      int highestGrade = 0;
-      for (int i = 0; i < schools.length; i++) {
-        schools[i].attendedGrades.sort();
-        if (schools[i].attendedGrades[schools.length - 1] > highestGrade) {
-          highestGrade = schools[i].attendedGrades[schools.length - 1];
-          currentSchoolIndex = i;
-        }
+  void setCurrentSchool() {
+    int currentSchoolIndex = -1;
+    int highestGrade = 0;
+    for (int i = 0; i < schools.length; i++) {
+      schools[i].attendedGrades.sort();
+      if (schools[i].attendedGrades[schools.length - 1] > highestGrade) {
+        highestGrade = schools[i].attendedGrades[schools.length - 1];
+        currentSchoolIndex = i;
       }
-      schools[currentSchoolIndex].currentSchool = true;
+    }
+    schools[currentSchoolIndex].currentSchool = true;
   }
 
-  void setGeneralData() async {
+  Future<int> setGeneralData() async {
     print("setting data");
     io.File? imageFile;
     if (image.runtimeType != String) {
@@ -215,8 +222,9 @@ class AppUser {
     int highestGrade = 0;
     for (int i = 0; i < schools.length; i++) {
       schools[i].attendedGrades.sort();
-      if (schools[i].attendedGrades[schools.length - 1] > highestGrade) {
-        highestGrade = schools[i].attendedGrades[schools.length - 1];
+      print(schools[i].attendedGrades);
+      if (schools[i].attendedGrades[schools[i].attendedGrades.length - 1] > highestGrade) {
+        highestGrade = schools[i].attendedGrades[schools[i].attendedGrades.length - 1];
         currentSchoolIndex = i;
       }
     }
@@ -226,6 +234,18 @@ class AppUser {
       schoolList.add(school.getJson());
     }
     print("here");
+    List<Map> tempClassList = [];
+    List<Map> tempSkillList = [];
+    List<Map> tempClubList = [];
+    for (Skill s in skills) {
+      tempSkillList.add(s.toJSON());
+    }
+    for (clubAppData s in clubs) {
+      tempClubList.add(s.toJson());
+    }
+    for (schoolClassStudent s in classes) {
+      tempClassList.add(s.toJson());
+    }
     await supaBase.from("user_auth_table").insert({
       "email": email,
       "schools": schoolList,
@@ -233,13 +253,18 @@ class AppUser {
       "state": stateToString(userState),
       "first_name": firstName,
       "last_name": lastName,
+      "grade": currentGradeToString(currentGrade),
+      "skills": tempSkillList,
+      "classes": tempClassList,
+      "clubs": tempClubList,
       "dateOfBirth": {
         "Month": monthToString(dateOfBirth.month),
         "Year": dateOfBirth.year,
         "Day": dateOfBirth.day,
       }
     });
-    print("done");
+    await setSchoolData();
+    return 1;
   }
 
   Future<int> authenticationUser() async {
@@ -268,7 +293,10 @@ class AppUser {
     return -1;
   }
 
-  void signOut() {}
+  Future<int> signOut() async {
+    GoogleSignIn().signOut();
+    return 1;
+  }
   Future<bool> findUserInDatabase() async {
     final userData = await supaBase.from('user_auth_table').select("email");
     for (int i = 0; i < userData.length; i++) {
@@ -297,6 +325,76 @@ class AppUser {
       }
     }
     return schools[0];
+  }
+
+  Future<int> updateData() async {
+    // delete school data
+    for(School s in schools){
+      try{
+        await supaBase.from(s.name.replaceAll(" ", "")).delete().eq("student_gmail", email);
+      }on Exception catch (e){}
+    }
+    await supaBase.from("user_auth_table").delete().eq("email", email);
+    try{
+      await supaBase.storage.from('User-Profile/public').remove([email + ".png"]);
+    }on Exception catch(e){}
+    setGeneralData();
+    return 1;
+  }
+
+  Future<bool> getDataFromDatabase(String gmail) async {
+    bool userFound = await findUserInDatabase();
+    if(userFound){
+      imageAlreadyThere = true;
+      /*
+        String email;
+        List<School> schools = [];
+        List<schoolClassStudent> classes = [];
+        List<clubAppData> clubs = [];
+        List<Skill> skills = [];
+        String firstName = "";
+        String lastName = "";
+        var image;
+        DateOfBirth dateOfBirth = DateOfBirth(0, 0, Months.None);
+        USStates userState = USStates.None;
+        Grade currentGrade;
+      */
+      Map dataBaseData = await supaBase.from("user_auth_table").select().eq('email', gmail).single();
+      email = dataBaseData["email"];
+      schools = [];
+      for(Map data in dataBaseData["schools"]){
+        School tempSchool = School();
+        tempSchool.fromJson(data);
+        schools.add(tempSchool);
+      }
+      classes = [];
+      for(Map data in dataBaseData["classes"]){
+        schoolClassStudent tempClass = schoolClassStudent();
+        tempClass.fromJson(data);
+        classes.add(tempClass);
+      }
+      clubs = [];
+      for(Map data in dataBaseData["clubs"]){
+        clubAppData tempClub = clubAppData();
+        tempClub.fromJson(data);
+        clubs.add(tempClub);
+      }
+      skills = [];
+      for(Map data in dataBaseData["skills"]){
+        Skill tempSkill = Skill();
+        tempSkill.fromJSON(data);
+        skills.add(tempSkill);
+      }
+      firstName = dataBaseData["first_name"];
+      lastName = dataBaseData["last_name"];
+      image = dataBaseData["image"];
+      dateOfBirth = DateOfBirth(dataBaseData["dateOfBirth"]["Day"], dataBaseData["dateOfBirth"]["Year"], stringToMonth( dataBaseData["dateOfBirth"]["Month"][0]));
+      userState = stringToState(dataBaseData["state"]);
+      currentGrade = currentGradeFromString(dataBaseData["grade"]);
+      return true;
+    }else{
+      return false;
+    }
   }
 }
 

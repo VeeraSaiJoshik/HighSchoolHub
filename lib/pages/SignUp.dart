@@ -228,6 +228,8 @@ class _SignUpScreenState extends State<SignUpScreen>
 
   Future<int> getClubDataFromdatabase() async {
     final result = await supaBase.from("Clubs").select();
+    print("getting club data");
+    print(result);
     classes = [];
     clubs = [];
     for (Map data in result) {
@@ -251,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     final result = await supaBase.from("Skills").select();
     classes = [];
     for (Map data in result) {
-      Skill value = Skill("", SkillType.None);
+      Skill value = Skill();
       value.fromJSON(data);
       skills.add(value);
     }
@@ -318,6 +320,12 @@ class _SignUpScreenState extends State<SignUpScreen>
       statePickerVisibility = statePickerVisibility == false;
     });
   }
+  bool gradePickerVisibility = false;
+  void showGradePicker() {
+    setState((){
+      gradePickerVisibility = gradePickerVisibility == false;
+    });
+  }
 
   bool searchSchoolVisibility = false;
   void showSearchSchool() {
@@ -339,12 +347,14 @@ class _SignUpScreenState extends State<SignUpScreen>
       showClubSchoolPicker = showClubSchoolPicker == false;
     });
   }
+
   //! INIT STATE FUNCTION
   void initStateFunction() async {
     _tabController = TabController(length: 4, vsync: this);
     await getWebsiteData();
     await getClassOptions();
     await getClubDataFromdatabase();
+    await getSkillsFromDatabase();
     classesQueryList = classes;
 
     setState(() {});
@@ -384,9 +394,10 @@ class _SignUpScreenState extends State<SignUpScreen>
   void setSchoolChoosingClub(clubAppData gClass) {
     schoolChoosingClub = gClass;
   }
+
   List sortListByQuery(List corpus, String query) {
     List<List> tempList = [];
-
+    print(corpus.length);
     List finalStringList = [];
     for (var value in corpus) {
       value.getCorpusRatingFromQuery(query);
@@ -399,7 +410,6 @@ class _SignUpScreenState extends State<SignUpScreen>
     int i = 0;
 
     for (var value in corpus.reversed) {
-      print(value.gScore);
       if (value.gScore != 0 && i <= 6) {
         finalStringList.add(value);
       }
@@ -522,6 +532,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     currentScreen++;
                                     _tabController.animateTo(currentScreen,
                                         duration: Duration(milliseconds: 300));
+                                  }else{ 
+                                    await currentUser.setGeneralData();
+                                    Navigator.of(context).popAndPushNamed("HomePage");
                                   }
                                   print("current Screen " +
                                       currentScreen.toString());
@@ -573,7 +586,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                               setLoadingState,
                               toggleShowBlackScreen,
                               showMonthPicker,
-                              showStatePicker),
+                              showStatePicker, 
+                              showGradePicker),
                           EducationInfoScreen(toggleShowBlackScreen,
                               showSearchSchool, currentUser),
                           SkillInfoScreen(
@@ -583,12 +597,11 @@ class _SignUpScreenState extends State<SignUpScreen>
                               showChooseSchoolForClass,
                               setSchoolChossingClass),
                           ClubInfoScreen(
-                            toggleShowBlackScreen,
-                            toggleSkillSearch,
-                            toggleClubSearchScreen,
-                            toggleClubSchoolPicker, 
-                            setSchoolChoosingClub
-                          )
+                              toggleShowBlackScreen,
+                              toggleSkillSearch,
+                              toggleClubSearchScreen,
+                              toggleClubSchoolPicker,
+                              setSchoolChoosingClub)
                         ],
                       ),
                     )),
@@ -649,6 +662,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                       }
                       if (statePickerVisibility) {
                         showStatePicker();
+                      }
+                      if(gradePickerVisibility){
+                        showGradePicker();
                       }
                     },
                     child: AnimatedOpacity(
@@ -838,6 +854,95 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                   fit: BoxFit.fitHeight,
                                                   child: Text(
                                                     stateToString(e),
+                                                    style: GoogleFonts.fredoka(
+                                                        color: backgroundColor,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ))),
+                              ),
+                            );
+                          }).toList()
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+            gradePickerVisibility
+                ? Center(
+                    child: Container(
+                      height: height * 0.47,
+                      width: width * 0.8,
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                      ),
+                      padding: EdgeInsets.all(width * 0.025),
+                      child: Column(
+                        children: [
+                          ...Grade.values.map((e) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  currentUser.changeGrade(e);
+                                });
+                              },
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 150),
+                                height: height * 0.08,
+                                width: width * 0.75,
+                                margin: currentGradeToString(e) == "None" ? EdgeInsets.zero: EdgeInsets.only(bottom: width * 0.025),
+                                decoration: BoxDecoration(
+                                    color: currentUser.currentGrade == e
+                                        ? blue
+                                        : backgroundColor,
+                                    border: Border.all(
+                                      color: darkblue,
+                                      width: width * 0.015,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Center(
+                                    child: Container(
+                                        height: height * 0.04,
+                                        child: Stack(
+                                          children: [
+                                            AnimatedOpacity(
+                                              duration:
+                                                  Duration(milliseconds: 150),
+                                              opacity: 1,
+                                              child: SizedBox(
+                                                height: height * 0.04,
+                                                child: FittedBox(
+                                                  fit: BoxFit.fitHeight,
+                                                  child: Text(
+                                                    currentGradeToString(e),
+                                                    style: GoogleFonts.fredoka(
+                                                        color: darkblue,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            AnimatedOpacity(
+                                              duration:
+                                                  Duration(milliseconds: 150),
+                                              opacity:
+                                                  currentUser.currentGrade == e
+                                                      ? 1
+                                                      : 0,
+                                              child: SizedBox(
+                                                height: height * 0.04,
+                                                child: FittedBox(
+                                                  fit: BoxFit.fitHeight,
+                                                  child: Text(
+                                                    currentGradeToString(e),
                                                     style: GoogleFonts.fredoka(
                                                         color: backgroundColor,
                                                         fontWeight:
@@ -1390,10 +1495,11 @@ class _SignUpScreenState extends State<SignUpScreen>
                                             return InkWell(
                                               onTap: () {
                                                 toggleShowBlackScreen();
-                                                clubAppData temp = clubAppData();
+                                                clubAppData temp =
+                                                    clubAppData();
                                                 temp.setClubData(e);
                                                 currentUser.clubs.add(temp);
-                                                setState((){});
+                                                setState(() {});
                                               },
                                               child: Container(
                                                 width: width * 0.85,
@@ -1500,80 +1606,91 @@ class _SignUpScreenState extends State<SignUpScreen>
                                           : [
                                               ...clubRecommendedList.map((e) {
                                                 return InkWell(
-                                              onTap: () {
-                                                toggleShowBlackScreen();
-                                                clubAppData temp = clubAppData();
-                                                temp.setClubData(e);
-                                                currentUser.clubs.add(temp);
-                                                setState((){});
-                                              },
-                                              child: Container(
-                                                width: width * 0.85,
-                                                height: height * 0.07,
-                                                margin: EdgeInsets.only(
-                                                    bottom: width * 0.015),
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: width * 0.01),
-                                                decoration: BoxDecoration(
-                                                    color: e.getClubTypeColor(),
-                                                    border: Border.all(
+                                                  onTap: () {
+                                                    toggleShowBlackScreen();
+                                                    clubAppData temp =
+                                                        clubAppData();
+                                                    temp.setClubData(e);
+                                                    currentUser.clubs.add(temp);
+                                                    setState(() {});
+                                                  },
+                                                  child: Container(
+                                                    width: width * 0.85,
+                                                    height: height * 0.07,
+                                                    margin: EdgeInsets.only(
+                                                        bottom: width * 0.015),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical:
+                                                                width * 0.01),
+                                                    decoration: BoxDecoration(
                                                         color: e
-                                                            .getClubTypeColorDark(),
-                                                        width: width * 0.01),
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(
-                                                                8))),
-                                                child: Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: width * 0.0125,
+                                                            .getClubTypeColor(),
+                                                        border: Border.all(
+                                                            color: e
+                                                                .getClubTypeColorDark(),
+                                                            width:
+                                                                width * 0.01),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    8))),
+                                                    child: Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: width * 0.0125,
+                                                        ),
+                                                        Container(
+                                                          height:
+                                                              height * 0.052,
+                                                          width: height * 0.052,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  backgroundColor,
+                                                              border: Border.all(
+                                                                  color: e
+                                                                      .getClubTypeColorDark(),
+                                                                  width: width *
+                                                                      0.008),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  width *
+                                                                      0.012),
+                                                          child: e.getImage("",
+                                                              finalColor: e
+                                                                  .getClubTypeColor()),
+                                                        ),
+                                                        SizedBox(
+                                                          width: width * 0.013,
+                                                        ),
+                                                        Container(
+                                                          width: width * 0.65,
+                                                          child: Text(
+                                                            e.className,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: GoogleFonts.fredoka(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color:
+                                                                    backgroundColor,
+                                                                height: 1,
+                                                                fontSize: MediaQuery.of(
+                                                                            context)
+                                                                        .textScaleFactor *
+                                                                    18),
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                    Container(
-                                                      height: height * 0.052,
-                                                      width: height * 0.052,
-                                                      decoration: BoxDecoration(
-                                                          color:
-                                                              backgroundColor,
-                                                          border: Border.all(
-                                                              color: e
-                                                                  .getClubTypeColorDark(),
-                                                              width: width *
-                                                                  0.008),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8)),
-                                                      padding: EdgeInsets.all(
-                                                          width * 0.012),
-                                                      child: e.getImage("",
-                                                          finalColor: e
-                                                              .getClubTypeColor()),
-                                                    ),
-                                                    SizedBox(
-                                                      width: width * 0.013,
-                                                    ),
-                                                    Container(
-                                                      width: width * 0.65,
-                                                      child: Text(
-                                                        e.className,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: GoogleFonts.fredoka(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color:
-                                                                backgroundColor,
-                                                            height: 1,
-                                                            fontSize: MediaQuery.of(
-                                                                        context)
-                                                                    .textScaleFactor *
-                                                                18),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            );
+                                                  ),
+                                                );
                                               }).toList()
                                             ],
                                 ),
@@ -1628,9 +1745,98 @@ class _SignUpScreenState extends State<SignUpScreen>
                                 padding: EdgeInsets.all(width * 0.015),
                                 child: ListView(
                                   padding: EdgeInsets.all(0),
-                                  children: [
+                                  children: 
+                                  skillsRecommendedList.length == 0 && skillsTec.text == ""? 
+                                  skills.map((e){
+                                         return InkWell(
+                                        onTap: () async {
+                                          currentUser.skills.add(e);
+                                          print("here");
+                                          setState((){});
+                                        },
+                                        child: Container(
+                                            width: width * 0.85,
+                                            height: height * 0.07,
+                                            margin: EdgeInsets.only(
+                                                bottom: width * 0.015),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: width * 0.02,
+                                                vertical: width * 0.01),
+                                            decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    255, 226, 225, 225),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5))),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    e.className,
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts.fredoka(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: mainColor,
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .textScaleFactor *
+                                                            18),
+                                                  ),
+                                                )
+                                              ],
+                                            )),
+                                      );
+                                  }).toList():
+                                  [
                                     ...skillsRecommendedList.map((e) {
-                                      return Container();
+                                      return InkWell(
+                                        onTap: () async {
+                                          currentUser.skills.add(e);
+                                          print("here");
+                                          setState((){});
+                                        },
+                                        child: Container(
+                                            width: width * 0.85,
+                                            height: height * 0.07,
+                                            margin: EdgeInsets.only(
+                                                bottom: width * 0.015),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: width * 0.02,
+                                                vertical: width * 0.01),
+                                            decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    255, 226, 225, 225),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5))),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    e.className,
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts.fredoka(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: mainColor,
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .textScaleFactor *
+                                                            18),
+                                                  ),
+                                                )
+                                              ],
+                                            )),
+                                      );
                                     }).toList()
                                   ],
                                 ),
@@ -1640,8 +1846,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                     ),
                   )
                 : Container(),
-              //! Club school picker
-              showClubSchoolPicker
+            //! Club school picker
+            showClubSchoolPicker
                 ? SingleChildScrollView(
                     child: InkWell(
                       onTap: () {
@@ -1669,7 +1875,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                                   decoration: BoxDecoration(
                                       color: backgroundColor,
                                       border: Border.all(
-                                          color: schoolChoosingClub.clubData.getClubTypeColor(), width: width * 0.015),
+                                          color: schoolChoosingClub.clubData
+                                              .getClubTypeColor(),
+                                          width: width * 0.015),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15))),
                                   padding: EdgeInsets.all(width * 0.015),
@@ -1677,12 +1885,14 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     padding: EdgeInsets.zero,
                                     children: [
                                       ...currentUser.schools.map((e) {
-                                        if(schoolChoosingClub.clubData.schoolContained(e.name) == false) return Container();
+                                        if (schoolChoosingClub.clubData
+                                                .schoolContained(e.name) ==
+                                            false) return Container();
                                         return InkWell(
                                           onTap: () {
                                             setState(() {
-                                              schoolChoosingClub!
-                                                  .schoolAt = e.name;
+                                              schoolChoosingClub!.schoolAt =
+                                                  e.name;
                                             });
                                           },
                                           child: Container(
@@ -1693,17 +1903,20 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                   Radius.circular(10)),
                                               border: Border.all(
                                                   color: schoolChoosingClub!
-                                                                    .schoolAt !=
-                                                                e.name
+                                                              .schoolAt !=
+                                                          e.name
                                                       ? Colors.transparent
-                                                      : schoolChoosingClub.clubData.getClubTypeColorDark(),
+                                                      : schoolChoosingClub
+                                                          .clubData
+                                                          .getClubTypeColorDark(),
                                                   width: width * 0.01),
                                               color: schoolChoosingClub!
-                                                                    .schoolAt !=
-                                                                e.name
+                                                          .schoolAt !=
+                                                      e.name
                                                   ? Color.fromARGB(
                                                       255, 226, 225, 225)
-                                                  : schoolChoosingClub.clubData.getClubTypeColor(),
+                                                  : schoolChoosingClub.clubData
+                                                      .getClubTypeColor(),
                                             ),
                                             margin: EdgeInsets.only(
                                                 bottom: height * 0.01),
@@ -1726,7 +1939,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                                     .schoolAt !=
                                                                 e.name
                                                             ? Colors.white
-                                                            : schoolChoosingClub.clubData.getClubTypeColorDark(),
+                                                            : schoolChoosingClub
+                                                                .clubData
+                                                                .getClubTypeColorDark(),
                                                         width: width * 0.01),
                                                     borderRadius:
                                                         BorderRadius.all(
@@ -1757,12 +1972,14 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                         color: schoolChoosingClub!
                                                                     .schoolAt !=
                                                                 e.name
-                                                            ? schoolChoosingClub.clubData.getClubTypeColor()
+                                                            ? schoolChoosingClub
+                                                                .clubData
+                                                                .getClubTypeColor()
                                                             : backgroundColor,
                                                         fontWeight:
                                                             FontWeight.w600,
-                                                        fontSize: e
-                                                                    .name.length <=
+                                                        fontSize: e.name
+                                                                    .length <=
                                                                 23
                                                             ? MediaQuery.of(
                                                                         context)

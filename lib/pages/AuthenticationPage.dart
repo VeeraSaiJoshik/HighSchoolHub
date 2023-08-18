@@ -61,7 +61,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       children: [
                         InkWell(
                           onTap: (){
-                            upploadClubData();
                           },
                           child: Lottie.asset(
                             "assets/animations/student.json",
@@ -177,13 +176,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: width * 0.015),
+                                    //SizedBox(width: width * 0.015),
                                     Container(
                                       height: height * 0.08,
                                       child: FittedBox(
                                         fit: BoxFit.fitHeight,
                                         child: Text(
-                                          "Net",
+                                          "NET",
                                           style: GoogleFonts.fredoka(
                                               letterSpacing: 0.5,
                                               color: mainColor,
@@ -210,8 +209,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                             Navigator.of(context).popAndPushNamed(
                                 "SignUpScreen",
                                 arguments: [currentUser]);
+                          }else{
+                            print("done");
+                            await currentUser.getDataFromDatabase(currentUser.userData!.email!);
+                            print("done");
+                            Navigator.of(context).popAndPushNamed("HomeScreen");
                           }
-                          print(status);
                         } on Exception catch (_) {
                           status = -1;
                         }

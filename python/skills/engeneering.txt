@@ -1,100 +1,100 @@
-Machining
-Welding
-Fabrication
-Calibration
-Simulation
-Kinetics
-Dynamics
-Material Testing
-Strength Analysis
-Circuitry
-Thermodynamics
-Aerodynamics
-Hydraulics
-Pneumatics
-Torque
-Friction
-Lubrication
-Reliability
-Finite Element Analysis
-Computational Fluid Dynamics
-Resilience
-Robustness
-Efficiency
-Ergonomics
-Schematics
-Prototyping
-Tolerance Analysis
-Heat Transfer
-Magnetic Fields
-Automation
-Control Systems
-Electromechanical Systems
-Signal Processing
-Machine Learning (Applied in Engineering)
-Testing Procedures
-CAD Modeling
-Vibration Control
-Structural Integrity
-Resilience
-Optimization
-Process Automation
-Reliability Engineering
-Kinematics
-Computational Mechanics
-Instrumentation
-Mechatronics
 Robotics
-Power Distribution
-Hazard Analysis
-Energy Efficiency
-Propulsion Systems
-R&D (Research and Development)
-Failure Analysis
-Fluid Dynamics
-Product Design
-Statistical Analysis (Applied in Engineering)
-Computational Modeling
-System Integration
-Prototyping
-Electromagnetic Theory
-Circuit Design
-Materials Science
-Electronics
-Structural Analysis
-Technical Documentation
-Root Cause Analysis
-Risk Assessment
-Rapid Prototyping
-CAD/CAM (Computer-Aided Design/Computer-Aided Manufacturing)
-Circuitry
-Manufacturing Processes
-Machine Design
-Systems Engineering
-Industrial Design
-Calibration
-Materials Selection
-Product Lifecycle Management
-Reliability Assessment
-Environmental Impact Assessment
-Computational Analysis
-Fluid Mechanics
-Heat Exchangers
+Automation Systems
+Sensors and Actuators
+Control Systems Integration
 Machine Vision
+Mechatronic System Design
+PLC Programming
+Motion Control
+Embedded Systems
+Human-Machine Interface (HMI)
+Nuclear Reactor Design
+Radiation Safety
+Nuclear Fuel Cycle
+Nuclear Instrumentation
+Nuclear Waste Management
+Radiological Emergency Response
+Reactor Kinetics
+Criticality Analysis
+Nuclear Regulatory Compliance
+Radioactive Material Handling
+Lean Manufacturing
+Six Sigma
+Supply Chain Management
+Quality Assurance
+Production Planning
+Process Optimization
+Ergonomics
+Operations Research
+Inventory Management
+Value Stream Mapping
+Medical Device Design
+Biomechanics
+Bioinformatics
+Biomaterials
+Medical Imaging
+Rehabilitation Engineering
+Tissue Engineering
+Neural Engineering
+Biomedical Instrumentation
+Regulatory Compliance
+Air Quality Modeling
+Water Treatment
+Environmental Impact Assessment
+Pollution Control
+Sustainability Practices
+Waste Management
+Renewable Energy Systems
+Environmental Monitoring
+Life Cycle Assessment
+Green Building Design
+Aerodynamics
+Orbital Mechanics
+Spacecraft Design
+Avionics
+Propulsion Systems
+Aerospace Materials
+Satellite Systems
+Wind Tunnel Testing
+Computational Fluid Dynamics (CFD)
+Rocket Propulsion
+Process Design
+Mass Transfer
+Heat Exchangers
+Reaction Engineering
 Process Control
-Sensor Integration
-Quality Control
-Data Analysis (Applied in Engineering)
-Communication Systems
-Computational Modeling
-System Dynamics
-Gear Mechanisms
-Kinetic Energy
-Computational Materials Science
-Structural Mechanics
-Resonance Analysis
-Transducer Design
-Rapid Prototyping
-Mechanical Systems
-Geometric Dimensioning and Tolerancing
-Reliability Modeling
+Petrochemical Engineering
+Polymers
+Chemical Kinetics
+HAZOP Analysis
+Aspen Plus
+Structural Analysis
+Geotechnical Engineering
+Transportation Engineering
+Surveying
+Construction Management
+Urban Planning
+Environmental Engineering
+AutoCAD Civil 3D
+Water Resources Engineering
+Geographical Information Systems (GIS)
+Circuit Design
+PCB Design
+Power Electronics
+Embedded Systems
+Control Systems
+Digital Signal Processing (DSP)
+FPGA Programming
+Microcontrollers
+Electromagnetics
+MATLAB
+CAD/CAM
+Finite Element Analysis (FEA)
+Thermodynamics
+Fluid Dynamics
+Heat Transfer
+Mechanical Design
+Materials Science
+SolidWorks
+AutoCAD
+ANSYS

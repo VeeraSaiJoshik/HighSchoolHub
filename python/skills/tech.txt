@@ -1,0 +1,200 @@
+Programming
+Web Dev
+Mobile Dev
+Database Mgmt
+Cloud Computing
+DevOps
+Full Stack
+AI & ML
+Data Analysis
+Cybersecurity
+Networking
+UX Design
+UI Design
+Agile
+Scrum
+Testing
+Algorithms
+Big Data
+Blockchain
+Cryptography
+Cloud Security
+CI/CD
+Docker
+Kubernetes
+React
+Angular
+Vue
+Python
+Java
+C++
+JavaScript
+HTML/CSS
+SQL
+NoSQL
+Git
+Linux
+Bash
+Docker
+AWS
+Azure
+GCP
+TensorFlow
+Docker
+Neural Nets
+API Design
+RESTful APIs
+GraphQL
+Ethical Hacking
+DevSecOps
+Problem Solving
+UX/UI
+Data Mining
+Machine Learning
+Deep Learning
+Cloud Arch
+Neural Nets
+Java
+JavaScript
+Python
+C#
+C
+R
+PHP
+Swift
+Ruby
+SQL
+MongoDB
+Firebase
+AWS
+Azure
+GCP
+Linux
+Docker
+Kubernetes
+Agile
+Scrum
+TDD
+BDD
+Git
+CI/CD
+Bash
+CSS
+HTML
+React
+Angular
+Vue
+Node.js
+Express.js
+REST
+GraphQL
+Flask
+Django
+Spring
+Hibernate
+TensorFlow
+Keras
+PyTorch
+NLP
+Computer Vision
+Data Analytics
+Data Viz
+BI Tools
+Hadoop
+Spark
+Blockchain
+Smart Contracts
+Cryptocurrencies
+Ethical Hacking
+Pen Testing
+Firewalls
+IDS/IPS
+VPN
+CISSP
+Cloud Security
+Network Sec
+UX Design
+UI Design
+Wireframing
+Prototyping
+Interaction Design
+A/B Testing
+Sketch
+Figma
+Adobe XD
+Accessibility
+Usability
+Design Thinking
+Mobile-First Design
+Responsive Design
+CSS Flexbox
+CSS Grid
+Design Patterns
+OOP
+MVC
+REST APIs
+GraphQL
+Microservices
+Serverless
+Docker
+Kubernetes
+AWS
+Azure
+GCP
+RESTful APIs
+GraphQL
+API Design
+API Testing
+Microservices
+Serverless
+CI/CD
+Git
+Docker
+Kubernetes
+AWS
+Azure
+GCP
+Agile
+Scrum
+TDD
+BDD
+Test Automation
+Performance Testing
+Security Testing
+Load Testing
+UI Testing
+Usability Testing
+REST Testing
+CI/CD Pipelines
+GitFlow
+Jenkins
+Docker
+Agile
+Scrum
+Kanban
+Pair Programming
+XP
+Code Review
+Design Patterns
+SOLID
+Clean Code
+Refactoring
+Design Principles
+Documentation
+Problem Solving
+Logical Thinking
+Debugging
+Algorithm Design
+Data Structures
+OOP
+Functional Programming
+Cloud Architecture
+Microservices
+RESTful APIs
+Containerization
+Serverless
+AWS
+Azure
+GCP
+Security
+DevOps

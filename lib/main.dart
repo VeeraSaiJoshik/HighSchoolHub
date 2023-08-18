@@ -4,6 +4,7 @@ import 'package:highschoolhub/firebase_options.dart';
 import 'package:highschoolhub/pages/AuthenticationPage.dart';
 import 'package:highschoolhub/pages/SignUp.dart';
 import 'package:highschoolhub/pages/SignUpScreen/createSchoolSpecificClass.dart';
+import 'package:highschoolhub/pages/homeScreen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:postgres/postgres.dart';
 
@@ -54,7 +55,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "SignUpScreen" : (context) => SignUpScreen(),
         "authenticationScreen" : (ctx) => AuthenticationScreen(), 
-        "CreateSchoolSpecificClass" : (ctx) => CreateSchoolSpecificClass()
+        "CreateSchoolSpecificClass" : (ctx) => CreateSchoolSpecificClass(), 
+        "HomeScreen" : (context) => HomeScreen(),
       },
     );
   }

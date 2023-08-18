@@ -109,7 +109,13 @@ flutter:
     - assets/images/classImage/school.png
     - assets/images/club.png
     - assets/images/skills.png
+    - assets/images/menus.png
+    - assets/images/home.png
+    - assets/images/openSettings.png
+    - assets/images/setting.png
+    - assets/images/logout.png
     - python/
+    - python/skills/
     - assets/images/clubIcons/
 
   # An image asset can refer to one or more resolution-specific "variants", see

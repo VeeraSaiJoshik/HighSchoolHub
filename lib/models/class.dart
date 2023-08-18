@@ -101,6 +101,10 @@ class schoolClassStudent{
     };
   }
   void fromJson(Map json){
+    classInfo = schoolClassDatabase();
+   classTakenAt = School();
+   taken = Grade.None;
+   classId = "";
     classInfo!.fromJson(json["classInfo"]);
     taken = currentGradeFromString(json["taken"]);
     classId = json["classId"];

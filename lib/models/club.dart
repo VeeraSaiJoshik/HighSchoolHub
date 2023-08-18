@@ -117,14 +117,12 @@ class club {
   double getCorpusRatingFromQuery(String query) {
     double score = 0;
     String currentQuery = "";
-    print(query);
-    for (int i = 0; i < query.length; i++) {
-      currentQuery = query.substring(0, i) + query.substring(i + 1, query.length);
-      if (className.toLowerCase().contains(currentQuery.toLowerCase()))
-        score = score +
-            100 /
-                (className.toLowerCase().indexOf(currentQuery.toLowerCase()) +
-                    1);
+    int i = 0;
+    for(String char in query.split('')){
+      currentQuery = currentQuery + char.toLowerCase();
+      if(className.toLowerCase().indexOf(currentQuery) != -1){
+        score += (1/(className.toLowerCase().indexOf(currentQuery) + 1)) * currentQuery.length* 1000;  
+      }
     }
     gScore = score;
     return score;
@@ -171,8 +169,6 @@ class club {
         return Image.network(img.imageAddress);
       }
     }
-    print("image color is not");
-    print(finalColor);
     return ImageIcon(
       AssetImage("assets/images/clubIcons/" +
           type.toReadableString().substring(9) +
@@ -200,6 +196,16 @@ class clubAppData {
   club clubData = club();
   String schoolAt = "";
   //! METHODS
+  void fromJson(Map data){
+    clubData.fromJson(data["clubData"]);
+    schoolAt = data["schoolAt"];
+  }
+  Map toJson(){
+    return {
+      "clubData":clubData.toJson(), 
+      "schoolAt":schoolAt
+    };
+  }
   void setClubData(club data) {
     clubData = data;
   }

@@ -2,6 +2,7 @@ import 'package:highschoolhub/main.dart';
 import 'package:highschoolhub/models/club.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:highschoolhub/models/school.dart';
+import 'package:highschoolhub/models/skills.dart';
 
 void upploadClubData() async {
   List<Map> testSchoolDat = [
@@ -224,10 +225,11 @@ void upploadClubData() async {
     "engeneering",
     "math",
     "music",
+    "media",
     "science",
-    "Service",
+    "service",
     "speech",
-    "Sports",
+    "sports",
     "tech"
   ];
   List<ClubType> typesList = [
@@ -237,6 +239,7 @@ void upploadClubData() async {
     ClubType.Culture,
     ClubType.Engineering,
     ClubType.Math,
+    ClubType.Media,
     ClubType.Music,
     ClubType.Science,
     ClubType.Service,
@@ -244,24 +247,34 @@ void upploadClubData() async {
     ClubType.Sports,
     ClubType.Technology
   ];
+  List<Skill> skillList = [];
   for(int i = 0; i < files.length; i++) {
     String file = files[i];
-    var contents = await rootBundle.loadString("python/" + file + ".txt");
+    var contents = await rootBundle.loadString("python/skills/" + file + ".txt");
     for(String c in contents.split("\n")){
-      String clubName = c.trimLeft().trimRight();
-      club clubData = club();
-      clubData.className = clubName;
-      clubData.images = [];
-      clubData.type = typesList[i];
-      clubData.schoolsAssociatedWith = dummySchoolData;
-      await supaBase.from("Clubs").insert(
-        clubData.toJson()
-      );
-      print(clubData.className);
+      String skillName = c.trimLeft().trimRight();
+      bool flag = false;
+      for(Skill s in skillList){
+        if(s.className == skillName){
+          flag = true;
+          s.types!.add(typesList[i]);
+          break;
+        }
+      }
+      if(flag == false){
+        print(skillName);
+        Skill s = Skill();
+        s.className = skillName;
+        s.types = [typesList[i]];
+        skillList.add(s);
+      }
     }
   }
-  /*club tempClub = club();
-  supaBase.from("Clubs").insert(
-    tempClub.toJson()
-  );*/
+  int total = skillList.length;
+  int index = 1;
+  for(Skill s in skillList){
+    await supaBase.from("Skills").insert(s.toJSON());
+    print(index.toString() + "/" + total.toString());
+    index += 1;
+  }
 }
