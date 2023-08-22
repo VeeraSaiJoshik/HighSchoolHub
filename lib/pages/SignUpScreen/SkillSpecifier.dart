@@ -10,8 +10,9 @@ class SkillInfoScreen extends StatefulWidget {
   Function showClassPickerVisibility;
   Function showChooseSchoolForClass;
   Function setSchoolChossingClass;
+  String heading;
   SkillInfoScreen(
-      this.currentUser, this.enableBlackScreen, this.showClassPickerVisibility, this.showChooseSchoolForClass, this.setSchoolChossingClass);
+      this.currentUser, this.enableBlackScreen, this.showClassPickerVisibility, this.showChooseSchoolForClass, this.setSchoolChossingClass, {this.heading = "Classes"});
   @override
   State<SkillInfoScreen> createState() => _SkillInfoScreenState();
 }
@@ -36,7 +37,7 @@ class _SkillInfoScreenState extends State<SkillInfoScreen> {
             child: FittedBox(
               fit: BoxFit.fitHeight,
               child: Text(
-                "Classes",
+                widget.heading,
                 style: GoogleFonts.fredoka(
                     color: orange, fontWeight: FontWeight.w700),
               ),

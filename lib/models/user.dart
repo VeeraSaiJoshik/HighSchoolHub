@@ -71,6 +71,7 @@ class AppUser {
   bool newImageChosen = false;
   bool imageAlreadyThere = false;
   var image;
+  List<String> network;
 
   DateOfBirth dateOfBirth = DateOfBirth(0, 0, Months.None);
   USStates userState = USStates.None;
@@ -93,9 +94,11 @@ class AppUser {
       this.userData,
       this.currentGrade = Grade.None,
       this.skills = const [],
-      this.clubs = const []}) {
+      this.clubs = const [], 
+      this.network = const []}) {
     if (this.skills.isEmpty) this.skills = [];
     if (this.clubs.isEmpty) this.clubs = [];
+    if (this.network.isEmpty) this.network = [];
   }
   String _generateRandomString() {
     final random = Random.secure();
@@ -202,12 +205,13 @@ class AppUser {
     schools[currentSchoolIndex].currentSchool = true;
   }
 
-  Future<int> setGeneralData() async {
+  Future<int> setGeneralData({bool imageAlso = true}) async {
     print("setting data");
     io.File? imageFile;
-    if (image.runtimeType != String) {
+    if (image.runtimeType != String && imageAlso) {
       imageFile = image;
       print("uploading");
+      print(imageFile.runtimeType);
       await supaBase.storage.from('User-Profile').upload(
             "public/$email.png",
             imageFile!,
@@ -216,7 +220,11 @@ class AppUser {
       image = supaBase.storage
           .from('User-Profile')
           .getPublicUrl('$email.png')
-          .replaceAll("User-Profile/", "User-Profile/public/");
+          .replaceAll("User-Profile/", "User-Profile/public/") ;
+      
+      print(image);
+      print("done uploading");
+      
     }
     int currentSchoolIndex = -1;
     int highestGrade = 0;
@@ -228,7 +236,7 @@ class AppUser {
         currentSchoolIndex = i;
       }
     }
-    schools[currentSchoolIndex].currentSchool = true;
+    if(currentSchoolIndex != -1)schools[currentSchoolIndex].currentSchool = true;
     List<Map> schoolList = [];
     for (School school in schools) {
       schoolList.add(school.getJson());
@@ -261,7 +269,8 @@ class AppUser {
         "Month": monthToString(dateOfBirth.month),
         "Year": dateOfBirth.year,
         "Day": dateOfBirth.day,
-      }
+      }, 
+      "network" : network
     });
     await setSchoolData();
     return 1;
@@ -327,7 +336,7 @@ class AppUser {
     return schools[0];
   }
 
-  Future<int> updateData() async {
+  Future<int> updateData({bool imageAlso = true}) async {
     // delete school data
     for(School s in schools){
       try{
@@ -335,10 +344,11 @@ class AppUser {
       }on Exception catch (e){}
     }
     await supaBase.from("user_auth_table").delete().eq("email", email);
-    try{
-      await supaBase.storage.from('User-Profile/public').remove([email + ".png"]);
-    }on Exception catch(e){}
-    setGeneralData();
+    print("deleting");
+    print("public/$email.png");
+    final response = await supaBase.storage.from('User-Profile').remove(["public/$email.png"]);
+    await setGeneralData(imageAlso : imageAlso);
+
     return 1;
   }
 
@@ -388,6 +398,8 @@ class AppUser {
       firstName = dataBaseData["first_name"];
       lastName = dataBaseData["last_name"];
       image = dataBaseData["image"];
+      if ( dataBaseData["network"] == []) network = dataBaseData["network"];
+      else network = [];
       dateOfBirth = DateOfBirth(dataBaseData["dateOfBirth"]["Day"], dataBaseData["dateOfBirth"]["Year"], stringToMonth( dataBaseData["dateOfBirth"]["Month"][0]));
       userState = stringToState(dataBaseData["state"]);
       currentGrade = currentGradeFromString(dataBaseData["grade"]);

@@ -129,7 +129,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     currentUserTemp.email = currentUser.email;
     currentUserTemp.firstName = currentUser.firstName;
     currentUserTemp.lastName = currentUser.lastName;
-    currentUserTemp.image = currentUser.image;
     currentUserTemp.skills = [];
     currentUserTemp.skills.addAll(currentUser.skills);
     currentUserTemp.schools = [];
@@ -180,6 +179,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                               height: height * 0.0725,
                               width: height * 0.0725,
                               child: FloatingActionButton(
+                                heroTag: "asdfdd",
                                 onPressed: () async {
                                   currentUser.currentGrade =
                                       currentUserTemp.currentGrade;
@@ -196,7 +196,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                                       currentUserTemp.firstName;
                                   currentUser.lastName =
                                       currentUserTemp.lastName;
-                                  currentUser.image = currentUserTemp.image;
                                   currentUser.skills = [];
                                   currentUser.skills
                                       .addAll(currentUserTemp.skills);
@@ -250,6 +249,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                               height: height * 0.0725,
                               width: height * 0.0725,
                               child: FloatingActionButton(
+                                heroTag: "asdfddd",
                                 onPressed: () async {
                                   await currentUser.updateData();
                                   Navigator.of(context).pop();

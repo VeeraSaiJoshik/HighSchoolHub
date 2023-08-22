@@ -114,6 +114,7 @@ flutter:
     - assets/images/openSettings.png
     - assets/images/setting.png
     - assets/images/logout.png
+    - assets/images/view.png
     - python/
     - python/skills/
     - assets/images/clubIcons/

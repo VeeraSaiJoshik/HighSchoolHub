@@ -61,9 +61,10 @@ class _SignUpScreenState extends State<SignUpScreen>
   List<schoolClassDatabase> classes = [];
   List clubs = [];
   List clubRecommendedList = [];
+  TextEditingController clubsTec = TextEditingController();
   List skills = [];
   List skillsRecommendedList = [];
-  TextEditingController clubsTec = TextEditingController();
+  
   TextEditingController skillsTec = TextEditingController();
   //! School Data Acquisition Functions
   Future<School> getFullSchoolData(
@@ -462,6 +463,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                             height: height * 0.0725,
                             width: height * 0.0725,
                             child: FloatingActionButton(
+                                heroTag: "asdf",
                                 onPressed: () async {
                                   if (currentScreen != 0) {
                                     currentScreen--;
@@ -527,6 +529,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                             height: height * 0.0725,
                             width: height * 0.0725,
                             child: FloatingActionButton(
+                              heroTag: "asdfd",
                                 onPressed: () async {
                                   if (currentScreen != 3) {
                                     currentScreen++;
@@ -534,7 +537,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                         duration: Duration(milliseconds: 300));
                                   }else{ 
                                     await currentUser.setGeneralData();
-                                    Navigator.of(context).popAndPushNamed("HomePage");
+                                    Navigator.of(context).popAndPushNamed("HomeScreen");
                                   }
                                   print("current Screen " +
                                       currentScreen.toString());
@@ -1202,95 +1205,98 @@ class _SignUpScreenState extends State<SignUpScreen>
                               SizedBox(
                                 height: height * 0.01,
                               ),
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 300),
-                                height: height * 0.3,
-                                width: width * 0.9,
-                                decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    border: Border.all(
-                                        color: orange, width: width * 0.015),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15))),
-                                padding: EdgeInsets.all(width * 0.015),
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.zero,
-                                  children: [
-                                    ...classesQueryList.isEmpty
-                                        ? classes.map((e) {
-                                            return InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    currentUser.addClass(e);
-                                                  });
-                                                },
-                                                child: ClassDisplayWidget(e));
-                                          }).toList()
-                                        : classesQueryList.map((e) {
-                                            return InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    currentUser.addClass(e);
-                                                  });
-                                                },
-                                                child: ClassDisplayWidget(e));
-                                          }).toList(),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).pushNamed(
-                                            "CreateSchoolSpecificClass",
-                                            arguments: {
-                                              "currentUser": currentUser
-                                            });
-                                      },
-                                      child: Container(
-                                        width: width * 0.85,
-                                        height: height * 0.075,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                          border: Border.all(
-                                              color: darkOrange,
-                                              width: width * 0.01),
-                                          color: orange,
-                                        ),
-                                        margin: EdgeInsets.only(
-                                            bottom: height * 0.01),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: height * 0.035,
-                                              width: height * 0.035,
-                                              child: ImageIcon(
-                                                AssetImage(
-                                                    "assets/images/add_school.png"),
-                                                color: backgroundColor,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: width * 0.025,
-                                            ),
-                                            Text(
-                                              "Add School Specific\nClass",
-                                              style: GoogleFonts.fredoka(
-                                                  fontWeight: FontWeight.w600,
+                              InkWell(
+                                onTap: (){},
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds: 300),
+                                  height: height * 0.3,
+                                  width: width * 0.9,
+                                  decoration: BoxDecoration(
+                                      color: backgroundColor,
+                                      border: Border.all(
+                                          color: orange, width: width * 0.015),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15))),
+                                  padding: EdgeInsets.all(width * 0.015),
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    children: [
+                                      ...classesQueryList.isEmpty
+                                          ? classes.map((e) {
+                                              return InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      currentUser.addClass(e);
+                                                    });
+                                                  },
+                                                  child: ClassDisplayWidget(e));
+                                            }).toList()
+                                          : classesQueryList.map((e) {
+                                              return InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      currentUser.addClass(e);
+                                                    });
+                                                  },
+                                                  child: ClassDisplayWidget(e));
+                                            }).toList(),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).pushNamed(
+                                              "CreateSchoolSpecificClass",
+                                              arguments: {
+                                                "currentUser": currentUser
+                                              });
+                                        },
+                                        child: Container(
+                                          width: width * 0.85,
+                                          height: height * 0.075,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            border: Border.all(
+                                                color: darkOrange,
+                                                width: width * 0.01),
+                                            color: orange,
+                                          ),
+                                          margin: EdgeInsets.only(
+                                              bottom: height * 0.01),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: height * 0.035,
+                                                width: height * 0.035,
+                                                child: ImageIcon(
+                                                  AssetImage(
+                                                      "assets/images/add_school.png"),
                                                   color: backgroundColor,
-                                                  height: 01,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .textScaleFactor *
-                                                          20),
-                                            ),
-                                          ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width * 0.025,
+                                              ),
+                                              Text(
+                                                "Add School Specific\nClass",
+                                                style: GoogleFonts.fredoka(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: backgroundColor,
+                                                    height: 01,
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .textScaleFactor *
+                                                            20),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               )
                             ],
@@ -2253,7 +2259,7 @@ class ClassDisplayWidget extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: backgroundColor,
                         height: 1,
-                        fontSize: MediaQuery.of(context).textScaleFactor * 20),
+                        fontSize: MediaQuery.of(context).textScaleFactor * 18),
                   ),
                 )
               ],

@@ -513,11 +513,16 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
     if(widget.currentUser.dateOfBirth.year.toString() != "") yearController.text = widget.currentUser.dateOfBirth.year.toString();
     if (widget.currentUser.userData != null &&
         widget.currentUser.userData!.photoURL != "" &&
-        widget.currentUser.userData!.photoURL != null ) {
+        widget.currentUser.userData!.photoURL != null &&
+        widget.currentUser.imageAlreadyThere == false) {
+          print("I am here");
       widget.currentUser.image = widget.currentUser.userData!.photoURL!;
       imagePicked = true;
       imageUrl = widget.currentUser.userData!.photoURL!;
       widget.currentUser.image = widget.currentUser.userData!.photoURL!;
+    }else if(widget.currentUser.image != ""){
+      imagePicked = true;
+      imageUrl = widget.currentUser.image;
     }
     firstNameController.addListener(() {
       widget.currentUser.firstName = firstNameController.text;
@@ -756,7 +761,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                                             child: CircleAvatar(
                                                 radius: height * 0.02,
                                                 backgroundImage:
-                                                    NetworkImage(imageUrl)),
+                                                    NetworkImage(widget.currentUser.userData!.photoURL!)),
                                           ),
                                         ),
                                   SizedBox(

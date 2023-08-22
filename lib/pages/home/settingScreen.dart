@@ -1,6 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:highschoolhub/pages/profileScreen.dart';
 import 'package:highschoolhub/pages/setting/editAcountData.dart';
+import 'package:highschoolhub/pages/setting/editClasses.dart';
+import 'package:highschoolhub/pages/setting/editClubs.dart';
+import 'package:highschoolhub/pages/setting/editSchoolData.dart';
 
 import '../../globalInfo.dart';
 import '../AuthenticationPage.dart';
@@ -17,6 +23,8 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    String imageUrl = currentUser.image;
+    print(imageUrl);
     return SafeArea(
         top: false,
         bottom: false,
@@ -51,7 +59,13 @@ class _SettingScreenState extends State<SettingScreen> {
                         width: width,
                         child: Row(
                           children: [
-                            Container(
+                             Builder(
+                              builder: (context) {
+                                return InkWell(
+                                  onTap: (){
+                                     Scaffold.of(context).openDrawer();
+                                  },
+                                  child: Container(
                               height: height * 0.04,
                               width: height * 0.04,
                               margin: EdgeInsets.only(left: width * 0.06),
@@ -60,6 +74,10 @@ class _SettingScreenState extends State<SettingScreen> {
                                 color: backgroundColor,
                               ),
                             )
+                                );
+                              }
+                            ),
+                            
                           ],
                         ),
                       ),
@@ -73,10 +91,13 @@ class _SettingScreenState extends State<SettingScreen> {
                                 BorderRadius.all(Radius.circular(15))),
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
-                          child: Image.network(
-                            currentUser.image,
+                          child: 
+                          currentUser.image.runtimeType == String ?
+                          Image.network(
+                            Uri.encodeFull(currentUser.image),
                             fit: BoxFit.cover,
-                          ),
+                            key: UniqueKey(),
+                          ):Container(),
                         ),
                       ),
                       Stack(
@@ -103,6 +124,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               fit: BoxFit.fitHeight,
                               child: Text(
                                 currentUser.email,
+                                
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.fredoka(
                                     color: backgroundColor,
@@ -124,11 +146,92 @@ class _SettingScreenState extends State<SettingScreen> {
                     children: [
                       InkWell(
                         onTap: () async {
+                         Navigator.of(context).push(
+                          MaterialPageRoute(builder: (c){
+                            return MyProfileScreen(currentUser.email);
+                          })
+                         );
+                        },
+                        child: Container(
+                          width: width * 0.95,
+                          height: height * 0.09,
+                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          decoration: BoxDecoration(
+                            color: mainColor,
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
+                            border: Border.all(
+                                color: darkGreen, width: width * 0.015),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: width * 0.04, right: width * 0.025),
+                                height: height * 0.04,
+                                width: height * 0.04,
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: ImageIcon(
+                                    AssetImage(
+                                        "assets/images/view.png"),
+                                    color: backgroundColor,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: height * 0.06,
+                                width: width * 0.65,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(),
+                                    ),
+                                    Container(
+                                        height: height * 0.045,
+                                        child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Text(
+                                            "View My Profile",
+                                            style: GoogleFonts.fredoka(
+                                                color: backgroundColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                    Expanded(
+                                      child: Container(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Expanded(child: Container()),
+                              Container(
+                                height: height * 0.035,
+                                width: height * 0.035,
+                                margin: EdgeInsets.only(right: width * 0.025),
+                                child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: ImageIcon(
+                                      AssetImage(
+                                          "assets/images/openSettings.png"),
+                                      color: backgroundColor),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(height: width * 0.025),
+                      InkWell(
+                        onTap: () async {
                           await Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
                             return EditAccountScreen();
                           }));
+                          imageCache.clear();
+
                           setState(() {
-                            
+                            print(currentUser.image );
+                            currentUser.image = currentUser.image + "?v=${DateTime.now().millisecondsSinceEpoch}";
                           });
                         },
                         child: Container(
@@ -201,210 +304,237 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                       Container(height: width * 0.025),
-                      Container(
-                        width: width * 0.95,
-                        height: height * 0.09,
-                        margin: EdgeInsets.symmetric(horizontal: width * 0.025),
-                        decoration: BoxDecoration(
-                          color: puprle,
-                          borderRadius: BorderRadius.all(Radius.circular(18)),
-                          border: Border.all(
-                              color: darkPurple, width: width * 0.015),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: width * 0.04, right: width * 0.025),
-                              height: height * 0.0425,
-                              width: height * 0.0425,
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: ImageIcon(
-                                  AssetImage(
-                                      "assets/images/signUpScreenIcons/school.png"),
-                                  color: backgroundColor,
+                      InkWell(
+                        onTap: () async {
+                          var delayV = await Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                            return EditSchoolScreen();
+                          }));
+                        },
+                        child: Container(
+                          width: width * 0.95,
+                          height: height * 0.09,
+                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          decoration: BoxDecoration(
+                            color: puprle,
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
+                            border: Border.all(
+                                color: darkPurple, width: width * 0.015),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: width * 0.04, right: width * 0.025),
+                                height: height * 0.0425,
+                                width: height * 0.0425,
+                                child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: ImageIcon(
+                                    AssetImage(
+                                        "assets/images/signUpScreenIcons/school.png"),
+                                    color: backgroundColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              height: height * 0.06,
-                              width: width * 0.65,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Container(),
-                                  ),
-                                  Container(
-                                      height: height * 0.045,
-                                      child: FittedBox(
-                                        fit: BoxFit.fitHeight,
-                                        child: Text(
-                                          "Edit School Info",
-                                          style: GoogleFonts.fredoka(
-                                              color: backgroundColor,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      )),
-                                  Expanded(
-                                    child: Container(),
-                                  )
-                                ],
+                              Container(
+                                height: height * 0.06,
+                                width: width * 0.65,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(),
+                                    ),
+                                    Container(
+                                        height: height * 0.045,
+                                        child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Text(
+                                            "Edit School Info",
+                                            style: GoogleFonts.fredoka(
+                                                color: backgroundColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                    Expanded(
+                                      child: Container(),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(child: Container()),
-                            Container(
-                              height: height * 0.035,
-                              width: height * 0.035,
-                              margin: EdgeInsets.only(right: width * 0.025),
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: ImageIcon(
-                                    AssetImage(
-                                        "assets/images/openSettings.png"),
-                                    color: backgroundColor),
-                              ),
-                            )
-                          ],
+                              Expanded(child: Container()),
+                              Container(
+                                height: height * 0.035,
+                                width: height * 0.035,
+                                margin: EdgeInsets.only(right: width * 0.025),
+                                child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: ImageIcon(
+                                      AssetImage(
+                                          "assets/images/openSettings.png"),
+                                      color: backgroundColor),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ), 
                       Container(height: width * 0.025),
-                      Container(
-                        width: width * 0.95,
-                        height: height * 0.09,
-                        margin: EdgeInsets.symmetric(horizontal: width * 0.025),
-                        decoration: BoxDecoration(
-                          color: orange,
-                          borderRadius: BorderRadius.all(Radius.circular(18)),
-                          border: Border.all(
-                              color: darkOrange, width: width * 0.015),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: width * 0.04, right: width * 0.025),
-                              height: height * 0.0425,
-                              width: height * 0.0425,
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: ImageIcon(
-                                  AssetImage(
-                                      "assets/images/signUpScreenIcons/skills.png"),
-                                  color: backgroundColor,
+                      InkWell(
+                        onTap: () async {
+                          var t = await Navigator.of(context).push(
+                            MaterialPageRoute(builder: (builder){
+                              return EditClassScreen();
+                            })
+                          );
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: width * 0.95,
+                          height: height * 0.09,
+                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          decoration: BoxDecoration(
+                            color: orange,
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
+                            border: Border.all(
+                                color: darkOrange, width: width * 0.015),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: width * 0.04, right: width * 0.025),
+                                height: height * 0.0425,
+                                width: height * 0.0425,
+                                child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: ImageIcon(
+                                    AssetImage(
+                                        "assets/images/signUpScreenIcons/skills.png"),
+                                    color: backgroundColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              height: height * 0.06,
-                              width: width * 0.65,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Container(),
-                                  ),
-                                  Container(
-                                      height: height * 0.045,
-                                      child: FittedBox(
-                                        fit: BoxFit.fitHeight,
-                                        child: Text(
-                                          "Edit Class Info",
-                                          style: GoogleFonts.fredoka(
-                                              color: backgroundColor,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      )),
-                                  Expanded(
-                                    child: Container(),
-                                  )
-                                ],
+                              Container(
+                                height: height * 0.06,
+                                width: width * 0.65,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(),
+                                    ),
+                                    Container(
+                                        height: height * 0.045,
+                                        child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Text(
+                                            "Edit Class Info",
+                                            style: GoogleFonts.fredoka(
+                                                color: backgroundColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                    Expanded(
+                                      child: Container(),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(child: Container()),
-                            Container(
-                              height: height * 0.035,
-                              width: height * 0.035,
-                              margin: EdgeInsets.only(right: width * 0.025),
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: ImageIcon(
-                                    AssetImage(
-                                        "assets/images/openSettings.png"),
-                                    color: backgroundColor),
-                              ),
-                            )
-                          ],
+                              Expanded(child: Container()),
+                              Container(
+                                height: height * 0.035,
+                                width: height * 0.035,
+                                margin: EdgeInsets.only(right: width * 0.025),
+                                child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: ImageIcon(
+                                      AssetImage(
+                                          "assets/images/openSettings.png"),
+                                      color: backgroundColor),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ), 
                       Container(height: width * 0.025),
-                      Container(
-                        width: width * 0.95,
-                        height: height * 0.09,
-                        margin: EdgeInsets.symmetric(horizontal: width * 0.025),
-                        decoration: BoxDecoration(
-                          color: mainColor,
-                          borderRadius: BorderRadius.all(Radius.circular(18)),
-                          border: Border.all(
-                              color: darkGreen, width: width * 0.015),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: width * 0.04, right: width * 0.025),
-                              height: height * 0.04,
-                              width: height * 0.04,
-                              child: FittedBox(
-                                fit: BoxFit.cover,
-                                child: ImageIcon(
-                                  AssetImage(
-                                      "assets/images/signUpScreenIcons/trophy.png"),
-                                  color: backgroundColor,
+                      InkWell(
+                        onTap: () async {
+                          var t = Navigator.of(context).push(
+                            MaterialPageRoute(builder: (c){
+                              return EditClubScreen();
+                            })
+                          );
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: width * 0.95,
+                          height: height * 0.09,
+                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          decoration: BoxDecoration(
+                            color: mainColor,
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
+                            border: Border.all(
+                                color: darkGreen, width: width * 0.015),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: width * 0.04, right: width * 0.025),
+                                height: height * 0.04,
+                                width: height * 0.04,
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: ImageIcon(
+                                    AssetImage(
+                                        "assets/images/signUpScreenIcons/trophy.png"),
+                                    color: backgroundColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              height: height * 0.06,
-                              width: width * 0.65,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Container(),
-                                  ),
-                                  Container(
-                                      height: height * 0.045,
-                                      child: FittedBox(
-                                        fit: BoxFit.fitHeight,
-                                        child: Text(
-                                          "Edit Club/Skill Info",
-                                          style: GoogleFonts.fredoka(
-                                              color: backgroundColor,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      )),
-                                  Expanded(
-                                    child: Container(),
-                                  )
-                                ],
+                              Container(
+                                height: height * 0.06,
+                                width: width * 0.65,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(),
+                                    ),
+                                    Container(
+                                        height: height * 0.045,
+                                        child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Text(
+                                            "Edit Club/Skill Info",
+                                            style: GoogleFonts.fredoka(
+                                                color: backgroundColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                    Expanded(
+                                      child: Container(),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(child: Container()),
-                            Container(
-                              height: height * 0.035,
-                              width: height * 0.035,
-                              margin: EdgeInsets.only(right: width * 0.025),
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: ImageIcon(
-                                    AssetImage(
-                                        "assets/images/openSettings.png"),
-                                    color: backgroundColor),
-                              ),
-                            )
-                          ],
+                              Expanded(child: Container()),
+                              Container(
+                                height: height * 0.035,
+                                width: height * 0.035,
+                                margin: EdgeInsets.only(right: width * 0.025),
+                                child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: ImageIcon(
+                                      AssetImage(
+                                          "assets/images/openSettings.png"),
+                                      color: backgroundColor),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       )
                     ],

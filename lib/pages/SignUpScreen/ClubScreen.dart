@@ -134,7 +134,7 @@ class _ClubInfoScreenState extends State<ClubInfoScreen> {
                                                                             fontWeight: FontWeight
                                                                                 .w600,
                                                                             fontSize: e.clubData.className.length <= 23
-                                                                                ? MediaQuery.of(context).textScaleFactor * 28
+                                                                                ? MediaQuery.of(context).textScaleFactor * 26
                                                                                 : MediaQuery.of(context).textScaleFactor * 22,
                                                                             height: 1),
                                                                       ),
@@ -395,7 +395,10 @@ class _ClubInfoScreenState extends State<ClubInfoScreen> {
                                     : Container()
                               ],
                             ),
-                          )
+                          ), 
+                          Container(
+                            height : height * 0.4
+                          ),
                         ],
                       )
                     :
