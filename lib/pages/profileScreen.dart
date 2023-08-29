@@ -60,7 +60,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   SizedBox(
                     height: width * 0.025,
                   ),
-                  true ? 
+                  requestSent ? 
                   Container(
                     height: height * 0.365,
                     width: width * 0.95,

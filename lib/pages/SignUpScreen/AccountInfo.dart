@@ -927,9 +927,9 @@ class SignUpScreenTextField extends StatefulWidget {
   String textFieldName;
   double textFieldNameWidth;
   TextEditingController tec;
-
+  bool wantMargin = false;
   SignUpScreenTextField(this.wantedHeight, this.wantedWidth, this.mainColor,
-      this.darkColor, this.textFieldName, this.textFieldNameWidth, this.tec);
+      this.darkColor, this.textFieldName, this.textFieldNameWidth, this.tec, {this.wantMargin = true});
   @override
   State<SignUpScreenTextField> createState() => _SignUpScreenTextFieldState();
 }
@@ -947,7 +947,7 @@ class _SignUpScreenTextFieldState extends State<SignUpScreenTextField> {
     double width = MediaQuery.of(context).size.width;
     return Container(
       height: widget.wantedHeight * 1.02,
-      margin: EdgeInsets.symmetric(horizontal: width * 0.06),
+      margin: widget.wantMargin ?  EdgeInsets.symmetric(horizontal: width * 0.06) : EdgeInsets.zero,
       width: widget.wantedWidth,
       child: Stack(
         children: [

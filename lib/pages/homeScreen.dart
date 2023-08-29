@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highschoolhub/globalInfo.dart';
 import 'package:highschoolhub/pages/AuthenticationPage.dart';
+import 'package:highschoolhub/pages/home/connectionsScreen.dart';
 import 'package:highschoolhub/pages/home/homeScreen.dart';
 import 'package:highschoolhub/pages/home/settingScreen.dart';
 import 'package:highschoolhub/pages/sideBarWidget.dart';
@@ -25,7 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
     
     if(cs == Screen.Home){
       return HomeScreenWidget();
-    }else{
+    }
+    else if(cs == Screen.connections){
+      return ConnectionsScreen();
+    }
+    else{
       return SettingScreen();
     }
   }

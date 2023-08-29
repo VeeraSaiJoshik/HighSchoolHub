@@ -71,11 +71,14 @@ class AppUser {
   bool newImageChosen = false;
   bool imageAlreadyThere = false;
   var image;
-  List<String> network;
-
+  List network;
+  List requestsSent; 
+  List requestsReceived; 
+  List requestsRejected;
   DateOfBirth dateOfBirth = DateOfBirth(0, 0, Months.None);
   USStates userState = USStates.None;
   Grade currentGrade;
+  int rating = 0;
   fa.User? userData;
   void setAlData(String email, School school, String image,
       DateOfBirth dateOfBirth, List<clubAppData> clubs, List<Skill> skills) {
@@ -86,7 +89,14 @@ class AppUser {
     this.skills = skills;
     this.clubs = clubs;
   }
-
+  void getRatingByQuery(String query){
+    String querySublist = "";
+    rating = 0;
+    for(int i = 0; i < query.length; i++){
+      querySublist = querySublist + query.substring(i, i + 1);
+      rating = rating + ()
+    }
+  }
   AppUser(
       {this.email = "",
       this.image = "",
@@ -95,10 +105,73 @@ class AppUser {
       this.currentGrade = Grade.None,
       this.skills = const [],
       this.clubs = const [], 
+      this.requestsSent = const [],
+      this.requestsReceived = const [],
+      this.requestsRejected = const [],
       this.network = const []}) {
     if (this.skills.isEmpty) this.skills = [];
     if (this.clubs.isEmpty) this.clubs = [];
     if (this.network.isEmpty) this.network = [];
+    if (this.requestsSent.isEmpty) this.requestsSent = [];
+    if (this.requestsReceived.isEmpty) this.requestsReceived = [];
+    if (this.requestsRejected.isEmpty) this.requestsRejected = [];
+  }
+  //! Friend Request Functions
+  Future<int> updateNetworkParameters () async {
+    Map dataBaseData = await supaBase.from("user_auth_table").select().eq('email', email).single();
+    network = dataBaseData["network"];
+    requestsSent  = dataBaseData["requestsSent"];
+    requestsReceived  = dataBaseData["requestsReceived"];
+    requestsRejected = dataBaseData["requestsRejected"];
+    return 1;
+  }
+  Future<int> updateNetworkParametersInDatabase() async {
+    await supaBase.from("user_auth_table").update({
+      "network" : network, 
+      "requestsSent" : requestsSent, 
+      "requestsReceived" : requestsReceived, 
+      "requestsRejected" : requestsRejected
+    }).eq('email', email);
+    return 1;
+  }
+  Future<int> acceptFriendRequest(String friendEmail) async {
+    requestsReceived.remove(friendEmail);
+    network.add(friendEmail);
+    updateNetworkParametersInDatabase();
+    AppUser tempUser = AppUser();
+    await tempUser.getDataFromDatabase(friendEmail);
+    tempUser.requestsSent.remove(email);
+    tempUser.network.add(email);
+    tempUser.updateNetworkParametersInDatabase();
+    return -1;
+  }
+  Future<int> declineFriendRequest(String friendEmail) async {
+    requestsReceived.remove(friendEmail);
+    updateNetworkParametersInDatabase();
+    AppUser tempUser = AppUser();
+    await tempUser.getDataFromDatabase(friendEmail);
+    tempUser.requestsSent.remove(email);
+    tempUser.requestsRejected.add(email);
+    tempUser.updateNetworkParametersInDatabase();
+    return -1;
+  }
+  Future<int> addFriendRequest(String friendEmail) async {
+    requestsSent.add(friendEmail);
+    updateNetworkParametersInDatabase();
+    AppUser tempUser = AppUser();
+    await tempUser.getDataFromDatabase(friendEmail);
+    tempUser.requestsReceived.add(email);
+    tempUser.updateNetworkParametersInDatabase();
+    return -1;
+  }
+  Future<int> removeFriendRequest(String friendEmail) async {
+    requestsSent.remove(friendEmail);
+    updateNetworkParametersInDatabase();
+    AppUser tempUser = AppUser();
+    await tempUser.getDataFromDatabase(friendEmail);
+    tempUser.requestsReceived.remove(email);
+    tempUser.updateNetworkParametersInDatabase();
+    return -1;
   }
   String _generateRandomString() {
     final random = Random.secure();
@@ -191,7 +264,15 @@ class AppUser {
     }
     return 1;
   }
-
+  School getCurrentSchool() {
+    setCurrentSchool();
+    for(School s in schools){
+      if(s.currentSchool){
+        return s;
+      }
+    }
+    return schools[0];
+  }
   void setCurrentSchool() {
     int currentSchoolIndex = -1;
     int highestGrade = 0;
@@ -270,7 +351,10 @@ class AppUser {
         "Year": dateOfBirth.year,
         "Day": dateOfBirth.day,
       }, 
-      "network" : network
+      "network" : network,
+      "requestsSent" : requestsSent, 
+      "requestsReceived" : requestsReceived, 
+      "requestsRejected" : requestsRejected
     });
     await setSchoolData();
     return 1;
@@ -353,6 +437,7 @@ class AppUser {
   }
 
   Future<bool> getDataFromDatabase(String gmail) async {
+    email = gmail;
     bool userFound = await findUserInDatabase();
     if(userFound){
       imageAlreadyThere = true;
@@ -370,6 +455,7 @@ class AppUser {
         Grade currentGrade;
       */
       Map dataBaseData = await supaBase.from("user_auth_table").select().eq('email', gmail).single();
+      print(dataBaseData);
       email = dataBaseData["email"];
       schools = [];
       for(Map data in dataBaseData["schools"]){
@@ -403,6 +489,13 @@ class AppUser {
       dateOfBirth = DateOfBirth(dataBaseData["dateOfBirth"]["Day"], dataBaseData["dateOfBirth"]["Year"], stringToMonth( dataBaseData["dateOfBirth"]["Month"][0]));
       userState = stringToState(dataBaseData["state"]);
       currentGrade = currentGradeFromString(dataBaseData["grade"]);
+      if (dataBaseData["network"] != [])network = dataBaseData["network"]; else network = [];
+      if (dataBaseData["requestsSent"] != [])requestsSent = dataBaseData["requestsSent"]; else requestsSent = [];
+      if (dataBaseData["requestsReceived"] != [])requestsReceived = dataBaseData["requestsReceived"]; else requestsReceived = [];
+      if (dataBaseData["requestsRejected"] != [])requestsRejected = dataBaseData["requestsRejected"]; else requestsRejected = [];
+      requestsSent = dataBaseData["requestsSent"];
+      requestsReceived = dataBaseData["requestsReceived"];
+      requestsRejected = dataBaseData["requestsRejected"];
       return true;
     }else{
       return false;

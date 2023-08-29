@@ -4,7 +4,7 @@ import 'package:highschoolhub/globalInfo.dart';
 import 'package:highschoolhub/models/user.dart';
 import 'package:highschoolhub/pages/AuthenticationPage.dart';
 
-enum Screen { Setting, Sign_Out, Home }
+enum Screen { Setting, Sign_Out, Home, connections }
 
 class SideBarWidget extends StatefulWidget {
   Screen currentScreen;
@@ -166,6 +166,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           Screen.Setting, 
                           widget.changeCurrentScreen, 
                           puprle
+                        ), 
+                        SideBarOptionWidget(
+                          "assets/images/Connections.png", 
+                          "Connections", 
+                          widget.currentScreen, 
+                          Screen.connections, 
+                          widget.changeCurrentScreen, 
+                          mainColor
                         )
                       ],
                     ),
