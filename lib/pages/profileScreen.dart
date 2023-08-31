@@ -15,9 +15,14 @@ class MyProfileScreen extends StatefulWidget {
 class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   late AppUser profileUser = AppUser();
-  bool showFullView = true;
+  bool showFullView = false;
   bool requestSent = false;
   void initStateFunction() async {
+    if(currentUser.requestsSent.contains(widget.profileUserEmail) == false){
+      requestSent = false;
+    }else{
+      requestSent = true;
+    }
     if (currentUser.network.contains(widget.profileUserEmail) ||
         widget.profileUserEmail == currentUser.email) {
       showFullView = true;
@@ -86,7 +91,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               Builder(builder: (context) {
                                 return InkWell(
                                     onTap: () {
-                                      Scaffold.of(context).openDrawer();
+                                      Navigator.of(context).pop();
                                     },
                                     child: Container(
                                       height: height * 0.04,

@@ -11,6 +11,7 @@ import 'package:highschoolhub/models/club.dart';
 import 'package:highschoolhub/models/school.dart';
 import 'package:highschoolhub/main.dart';
 import 'package:highschoolhub/models/skills.dart';
+import 'package:highschoolhub/pages/AuthenticationPage.dart';
 import 'package:highschoolhub/pages/SignUpScreen/AccountInfo.dart';
 import 'package:supabase/supabase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -72,6 +73,74 @@ class AppUser {
   bool imageAlreadyThere = false;
   var image;
   List network;
+  void addNetworkMember(String email){
+    AppUser tempuser = AppUser();
+    tempuser.getDataFromDatabase(email);
+    network.add(tempuser);
+  }
+  void removeNetworkMember(String u){
+    int at = -1;
+    int i = 0;
+    for(User u1 in network){
+      if(u == u1.email){
+        at = i;
+        break;
+      }
+      i += 1;
+    }
+    network.removeAt(at);
+  }
+  void addRequestsSentUser(String email){
+    AppUser tempuser = AppUser();
+    tempuser.getDataFromDatabase(email);
+    requestsSent.add(tempuser);
+  }
+  void removeRequestsSentUser(String u){
+    int at = -1;
+    int i = 0;
+    for(User u1 in requestsSent){
+      if(u == u1.email){
+        at = i;
+        break;
+      }
+      i += 1;
+    }
+    requestsSent.removeAt(at);
+  }
+  void addRequestsReceivedUser(String email){
+    AppUser tempuser = AppUser();
+    tempuser.getDataFromDatabase(email);
+    requestsReceived.add(tempuser);
+  }
+  void removeRequestsReceivedUser(String u){
+    int at = -1;
+    int i = 0;
+    for(User u1 in requestsReceived){
+      if(u == u1.email){
+        at = i;
+        break;
+      }
+      i += 1;
+    }
+    requestsReceived.removeAt(at);
+  }
+  void addrequestsRejectedmember(String email){
+    AppUser tempuser = AppUser();
+    tempuser.getDataFromDatabase(email);
+    requestsRejected.add(tempuser);
+  }
+  void removeRequestsRejected(String u){
+    int at = -1;
+    int i = 0;
+    for(User u1 in requestsRejected){
+      if(u == u1.email){
+        at = i;
+        break;
+      }
+      i += 1;
+    }
+    requestsRejected.removeAt(at);
+  }
   List requestsSent; 
   List requestsReceived; 
   List requestsRejected;
@@ -94,7 +163,7 @@ class AppUser {
     rating = 0;
     for(int i = 0; i < query.length; i++){
       querySublist = querySublist + query.substring(i, i + 1);
-      rating = rating + ()
+      rating = rating;
     }
   }
   AppUser(
@@ -119,57 +188,80 @@ class AppUser {
   //! Friend Request Functions
   Future<int> updateNetworkParameters () async {
     Map dataBaseData = await supaBase.from("user_auth_table").select().eq('email', email).single();
-    network = dataBaseData["network"];
+    if (dataBaseData["requestsReceived"] != []){
+        requestsReceived = [];
+        for(String em in dataBaseData["requestsReceived"]){
+          AppUser temUser = AppUser();
+          await temUser.getDataFromDatabase(em);
+          requestsReceived.add(temUser);
+        }
+      }else requestsReceived = [];
+    if (dataBaseData["network"] != []){
+        network = [];
+        for(String em in dataBaseData["network"]){
+          AppUser temUser = AppUser();
+          await temUser.getDataFromDatabase(em);
+          network.add(temUser);
+        }
+      }else network = [];
     requestsSent  = dataBaseData["requestsSent"];
-    requestsReceived  = dataBaseData["requestsReceived"];
     requestsRejected = dataBaseData["requestsRejected"];
     return 1;
   }
   Future<int> updateNetworkParametersInDatabase() async {
+    List requestsTemp = [];
+    List networkTemp = [];
+    for(AppUser u in network){
+      networkTemp.add(u.email);
+    }
+    for(AppUser u in network){
+      requestsTemp.add(u.email);
+    }
     await supaBase.from("user_auth_table").update({
-      "network" : network, 
+      "network" : networkTemp, 
       "requestsSent" : requestsSent, 
-      "requestsReceived" : requestsReceived, 
-      "requestsRejected" : requestsRejected
+      "requestsReceived" : requestsTemp, 
+      "requestsRejected" : requestsTemp
     }).eq('email', email);
     return 1;
   }
   Future<int> acceptFriendRequest(String friendEmail) async {
-    requestsReceived.remove(friendEmail);
-    network.add(friendEmail);
+    removeRequestsReceivedUser(friendEmail);
+    addNetworkMember(friendEmail);
     updateNetworkParametersInDatabase();
     AppUser tempUser = AppUser();
+    updateNetworkParameters();
     await tempUser.getDataFromDatabase(friendEmail);
-    tempUser.requestsSent.remove(email);
-    tempUser.network.add(email);
+    tempUser.removeRequestsSentUser(email);
+    tempUser.addNetworkMember(email);
     tempUser.updateNetworkParametersInDatabase();
     return -1;
   }
   Future<int> declineFriendRequest(String friendEmail) async {
-    requestsReceived.remove(friendEmail);
+    removeRequestsReceivedUser(friendEmail);
     updateNetworkParametersInDatabase();
     AppUser tempUser = AppUser();
     await tempUser.getDataFromDatabase(friendEmail);
-    tempUser.requestsSent.remove(email);
-    tempUser.requestsRejected.add(email);
+    tempUser.removeRequestsReceivedUser(email);
+    tempUser.addrequestsRejectedmember(email);
     tempUser.updateNetworkParametersInDatabase();
     return -1;
   }
   Future<int> addFriendRequest(String friendEmail) async {
-    requestsSent.add(friendEmail);
+    addRequestsSentUser(friendEmail);
     updateNetworkParametersInDatabase();
     AppUser tempUser = AppUser();
     await tempUser.getDataFromDatabase(friendEmail);
-    tempUser.requestsReceived.add(email);
+    tempUser.addRequestsReceivedUser(currentUser.email);
     tempUser.updateNetworkParametersInDatabase();
     return -1;
   }
   Future<int> removeFriendRequest(String friendEmail) async {
-    requestsSent.remove(friendEmail);
+    removeRequestsSentUser(friendEmail);
     updateNetworkParametersInDatabase();
     AppUser tempUser = AppUser();
     await tempUser.getDataFromDatabase(friendEmail);
-    tempUser.requestsReceived.remove(email);
+    tempUser.removeRequestsReceivedUser(email);
     tempUser.updateNetworkParametersInDatabase();
     return -1;
   }
@@ -271,15 +363,16 @@ class AppUser {
         return s;
       }
     }
-    return schools[0];
+    School tempSchool = School();
+    return tempSchool;
   }
   void setCurrentSchool() {
     int currentSchoolIndex = -1;
     int highestGrade = 0;
     for (int i = 0; i < schools.length; i++) {
       schools[i].attendedGrades.sort();
-      if (schools[i].attendedGrades[schools.length - 1] > highestGrade) {
-        highestGrade = schools[i].attendedGrades[schools.length - 1];
+      if (schools[i].attendedGrades.length != 0 && schools[i].attendedGrades[schools[i].attendedGrades.length - 1] > highestGrade) {
+        highestGrade = schools[i].attendedGrades[schools[i].attendedGrades.length  - 1];
         currentSchoolIndex = i;
       }
     }
@@ -491,11 +584,16 @@ class AppUser {
       currentGrade = currentGradeFromString(dataBaseData["grade"]);
       if (dataBaseData["network"] != [])network = dataBaseData["network"]; else network = [];
       if (dataBaseData["requestsSent"] != [])requestsSent = dataBaseData["requestsSent"]; else requestsSent = [];
-      if (dataBaseData["requestsReceived"] != [])requestsReceived = dataBaseData["requestsReceived"]; else requestsReceived = [];
+      if (dataBaseData["requestsReceived"] != []){
+        requestsReceived = [];
+        for(String em in dataBaseData["requestsReceived"]){
+          AppUser temUser = AppUser();
+          await temUser.getDataFromDatabase(em);
+          requestsReceived.add(temUser);
+        }
+      }else requestsReceived = [];
       if (dataBaseData["requestsRejected"] != [])requestsRejected = dataBaseData["requestsRejected"]; else requestsRejected = [];
-      requestsSent = dataBaseData["requestsSent"];
-      requestsReceived = dataBaseData["requestsReceived"];
-      requestsRejected = dataBaseData["requestsRejected"];
+      
       return true;
     }else{
       return false;

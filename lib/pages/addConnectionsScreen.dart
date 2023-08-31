@@ -19,7 +19,7 @@ class _AddConnectionsScreenState extends State<AddConnectionsScreen> {
   List<AppUser> searchList = [];
   void rankSearchListByQuery(String query){
     searchList = [];
-    
+
   }
   void initStateFunciton() async {
     var data = await supaBase.from("user_auth_table").select('email');
@@ -158,10 +158,13 @@ class _AddConnectionsScreenState extends State<AddConnectionsScreen> {
                             children: appUsers.map((e) {
                               print(e.image);
                               return InkWell(
-                                onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (c){
-                                    return MyProfileScreen(e.email);
+                                onTap: () async {
+                                  var temp = await Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                                    return MyProfileScreen(e.email, );
                                   }));
+                                  setState(() {
+                                    
+                                  });
                                 },
                                 child: Container(
                                   width: width * 0.93,
@@ -247,15 +250,23 @@ class _AddConnectionsScreenState extends State<AddConnectionsScreen> {
                                       Positioned(
                                         top: height * 0.015,
                                         right : width * 0.02,
-                                        child: Container(
-                                              child: ImageIcon(
-                                                AssetImage(
-                                                  "assets/images/add-user.png", 
+                                        child: currentUser.requestsSent.contains(e.email) ? Container() : InkWell(
+                                          onTap: () async {
+                                            await currentUser.addFriendRequest(e.email);
+                                            setState(() {
+                                    
+                                        });
+                                          },
+                                          child: Container(
+                                                child: ImageIcon(
+                                                  AssetImage(
+                                                    "assets/images/add-user.png", 
+                                                  ),
+                                                  color: backgroundColor,
+                                                  size: height * 0.035,
                                                 ),
-                                                color: backgroundColor,
-                                                size: height * 0.035,
-                                              ),
-                                          ),
+                                            ),
+                                        ),
                                       )
                                     ],
                                   ),
