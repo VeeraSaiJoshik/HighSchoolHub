@@ -29,12 +29,14 @@ Map<String, AppUser> allUsers = {};
 Map<String, Map<String, schoolUserList>> schoolData = {};
 
 Future<void> main() async {
+  print("started");
   databaseConnection = await createConnection();
   print(databaseConnection);
   await Supabase.initialize(
     url : "https://sadyzgmrtuzafigiufny.supabase.co", 
     anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZHl6Z21ydHV6YWZpZ2l1Zm55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODkxODI2ODYsImV4cCI6MjAwNDc1ODY4Nn0.LuBK4FQs6umjhu_cAiV7AR2JgP6hiTgq1MrFXEXG65k",
   );
+  print("supabase intitialized");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

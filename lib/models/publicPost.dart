@@ -125,8 +125,10 @@ class PublicPost {
         }
       }
     }
-    // compare locaiton
-    
+    // compare location
+    if(type == PostType.Volounteer){
+      
+    }
     // compare tagged schools
     // compare tagged classes
     return gScore;

@@ -103,349 +103,348 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         SizedBox(
                           height: height * 0.01,
                         ),
-                        widget.post.imageAddress == ""
-                            ? Container()
-                            : Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.shade300.withOpacity(0.4),
-                                    borderRadius: BorderRadius.circular(15)),
-                                padding:
-                                    EdgeInsets.symmetric(vertical: height * 0.01),
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: width * 0.01),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                        height: height * 0.25,
-                                        width: width,
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: width * 0.02),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(15)),
+                          padding:
+                              EdgeInsets.symmetric(vertical: height * 0.01),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: width * 0.01),
+                          child: Column(
+                            children: [
+                              widget.post.imageAddress == ""? Container():
+                              Container(
+                                  height: height * 0.25,
+                                  width: width,
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: width * 0.02),
+                                  decoration: BoxDecoration(
+                                      color: blue,
+                                      border: Border.all(
+                                          color: darkblue,
+                                          width: width * 0.0125),
+                                      borderRadius:
+                                          BorderRadius.circular(8)),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(3),
+                                    child: Image.network(
+                                        widget.post.imageAddress,
+                                        fit: BoxFit.cover),
+                                  )),
+                              SizedBox(height: height * 0.005),
+                              Row(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: width * 0.03,
+                                  ),
+                                  InkWell(
+                                    onTap: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (builder) {
+                                      return MyProfileScreen(currentUser);
+                                    })),
+                                    child: Container(
+                                        height: height * 0.04,
+                                        width: height * 0.04,
                                         decoration: BoxDecoration(
                                             color: blue,
                                             border: Border.all(
                                                 color: darkblue,
-                                                width: width * 0.0125),
+                                                width: width * 0.008),
                                             borderRadius:
-                                                BorderRadius.circular(8)),
+                                                BorderRadius.circular(5)),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(3),
-                                          child: Image.network(
-                                              widget.post.imageAddress,
-                                              fit: BoxFit.cover),
-                                        )),
-                                    SizedBox(height: height * 0.005),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                            borderRadius:
+                                                BorderRadius.circular(2),
+                                            child: Image.network(
+                                              widget.post.author!.image,
+                                              fit: BoxFit.cover,
+                                            ))),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.01,
+                                  ),
+                                  Container(
+                                    height: height * 0.045,
+                                    width: width * 0.5,
+                                    child: Stack(
                                       children: [
-                                        SizedBox(
-                                          width: width * 0.03,
-                                        ),
-                                        InkWell(
-                                          onTap: () => Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (builder) {
-                                            return MyProfileScreen(currentUser);
-                                          })),
-                                          child: Container(
-                                              height: height * 0.04,
-                                              width: height * 0.04,
-                                              decoration: BoxDecoration(
-                                                  color: blue,
-                                                  border: Border.all(
-                                                      color: darkblue,
-                                                      width: width * 0.008),
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(2),
-                                                  child: Image.network(
-                                                    widget.post.author!.image,
-                                                    fit: BoxFit.cover,
-                                                  ))),
-                                        ),
-                                        SizedBox(
-                                          width: width * 0.01,
-                                        ),
-                                        Container(
-                                          height: height * 0.045,
-                                          width: width * 0.5,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                top: 0,
-                                                child: InkWell(
-                                                  onTap: () =>
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (builder) {
-                                                    return MyProfileScreen(
-                                                        currentUser);
-                                                  })),
-                                                  child: Container(
-                                                    height: height * 0.032,
-                                                    child: FittedBox(
-                                                      fit: BoxFit.fitHeight,
-                                                      child: Text(
-                                                        widget.post.author!
-                                                                .firstName +
-                                                            " " +
-                                                            widget.post.author!
-                                                                .lastName,
-                                                        style:
-                                                            GoogleFonts.fredoka(
-                                                                color: blue,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                child: Container(
-                                                  height: height * 0.02,
-                                                  child: FittedBox(
-                                                    fit: BoxFit.fitHeight,
-                                                    child: Text(
-                                                      "Posted on ${DateFormat('MM/dd/yyyy').format(widget.post.DatePosted)}",
-                                                      style: GoogleFonts.fredoka(
+                                        Positioned(
+                                          top: 0,
+                                          child: InkWell(
+                                            onTap: () =>
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (builder) {
+                                              return MyProfileScreen(
+                                                  currentUser);
+                                            })),
+                                            child: Container(
+                                              height: height * 0.032,
+                                              child: FittedBox(
+                                                fit: BoxFit.fitHeight,
+                                                child: Text(
+                                                  widget.post.author!
+                                                          .firstName +
+                                                      " " +
+                                                      widget.post.author!
+                                                          .lastName,
+                                                  style:
+                                                      GoogleFonts.fredoka(
                                                           color: blue,
                                                           fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                  ),
+                                                              FontWeight
+                                                                  .w600),
                                                 ),
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                        Expanded(
-                                          child: Container(),
+                                        Positioned(
+                                          bottom: 0,
+                                          child: Container(
+                                            height: height * 0.02,
+                                            child: FittedBox(
+                                              fit: BoxFit.fitHeight,
+                                              child: Text(
+                                                "Posted on ${DateFormat('MM/dd/yyyy').format(widget.post.DatePosted)}",
+                                                style: GoogleFonts.fredoka(
+                                                    color: blue,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        currentUser.userEmailInMyConnectionList(
-                                                widget.post.author!.email)
-                                            ? Container()
-                                            : Container(
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(),
+                                  ),
+                                  currentUser.userEmailInMyConnectionList(
+                                          widget.post.author!.email)
+                                      ? Container()
+                                      : Container(
+                                          height: height * 0.025,
+                                          child: FittedBox(
+                                            fit: BoxFit.fitHeight,
+                                            child: ImageIcon(
+                                              AssetImage(
+                                                  "assets/images/link.png"),
+                                              color: blue,
+                                            ),
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    width: width * 0.045,
+                                  )
+                                ],
+                              ),
+                              Container(
+                                margin:
+                                    EdgeInsets.only(top: height * 0.005),
+                                height: height * 0.03,
+                                child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: width * 0.025,
+                                    ),
+                                    InkWell(
+                                      onTap: () async {
+                                        if (widget.post.likes
+                                            .contains(currentUser.email)) {
+                                          widget.post.likes
+                                              .remove(currentUser.email);
+                                        } else {
+                                          widget.post.likes
+                                              .add(currentUser.email);
+                                        }
+                                        await supaBase
+                                            .from("Posts")
+                                            .update(widget.post.toJson())
+                                            .eq('id', widget.post.id);
+                                        setState(() {});
+                                      },
+                                      child: SizedBox(
+                                        child: Row(children: [
+                                          Container(
+                                              height: height * 0.02,
+                                              child: FittedBox(
+                                                fit: BoxFit.fitHeight,
+                                                child: ImageIcon(
+                                                  AssetImage(
+                                                      "assets/images/like.png"),
+                                                  color: widget.post.likes
+                                                          .contains(
+                                                              currentUser
+                                                                  .email)
+                                                      ? blue
+                                                      : Colors
+                                                          .grey.shade500,
+                                                ),
+                                              )),
+                                          Container(
+                                            height: height * 0.035,
+                                            margin: EdgeInsets.only(
+                                                left: width * 0.01),
+                                            child: FittedBox(
+                                              fit: BoxFit.fitHeight,
+                                              child: Text(
+                                                "Like",
+                                                style: GoogleFonts.fredoka(
+                                                  color: widget.post.likes
+                                                          .contains(
+                                                              currentUser
+                                                                  .email)
+                                                      ? blue
+                                                      : Colors
+                                                          .grey.shade500,
+                                                  fontWeight:
+                                                      FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
+                                    ),
+                                    const Expanded(child: SizedBox()),
+                                    InkWell(
+                                      onTap: () async {
+                                        if (widget.post.celebrate
+                                            .contains(currentUser.email)) {
+                                          widget.post.celebrate
+                                              .remove(currentUser.email);
+                                        } else {
+                                          widget.post.celebrate
+                                              .add(currentUser.email);
+                                        }
+                                        await supaBase
+                                            .from("Posts")
+                                            .update(widget.post.toJson())
+                                            .eq('id', widget.post.id);
+                                        setState(() {});
+                                      },
+                                      child: SizedBox(
+                                        child: Row(
+                                          children: [
+                                            Container(
                                                 height: height * 0.025,
                                                 child: FittedBox(
                                                   fit: BoxFit.fitHeight,
                                                   child: ImageIcon(
-                                                    AssetImage(
-                                                        "assets/images/link.png"),
-                                                    color: blue,
-                                                  ),
-                                                ),
-                                              ),
-                                        SizedBox(
-                                          width: width * 0.045,
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(top: height * 0.005),
-                                      height: height * 0.03,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: width * 0.025,
-                                          ),
-                                          InkWell(
-                                            onTap: () async {
-                                              if (widget.post.likes
-                                                  .contains(currentUser.email)) {
-                                                widget.post.likes
-                                                    .remove(currentUser.email);
-                                              } else {
-                                                widget.post.likes
-                                                    .add(currentUser.email);
-                                              }
-                                              await supaBase
-                                                  .from("Posts")
-                                                  .update(widget.post.toJson())
-                                                  .eq('id', widget.post.id);
-                                              setState(() {});
-                                            },
-                                            child: SizedBox(
-                                              child: Row(children: [
-                                                Container(
-                                                    height: height * 0.02,
-                                                    child: FittedBox(
-                                                      fit: BoxFit.fitHeight,
-                                                      child: ImageIcon(
-                                                        AssetImage(
-                                                            "assets/images/like.png"),
-                                                        color: widget.post.likes
-                                                                .contains(
-                                                                    currentUser
-                                                                        .email)
-                                                            ? blue
-                                                            : Colors
-                                                                .grey.shade500,
-                                                      ),
-                                                    )),
-                                                Container(
-                                                  height: height * 0.035,
-                                                  margin: EdgeInsets.only(
-                                                      left: width * 0.01),
-                                                  child: FittedBox(
-                                                    fit: BoxFit.fitHeight,
-                                                    child: Text(
-                                                      "Like",
-                                                      style: GoogleFonts.fredoka(
-                                                        color: widget.post.likes
-                                                                .contains(
-                                                                    currentUser
-                                                                        .email)
-                                                            ? blue
-                                                            : Colors
-                                                                .grey.shade500,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ]),
-                                            ),
-                                          ),
-                                          const Expanded(child: SizedBox()),
-                                          InkWell(
-                                            onTap: () async {
-                                              if (widget.post.celebrate
-                                                  .contains(currentUser.email)) {
-                                                widget.post.celebrate
-                                                    .remove(currentUser.email);
-                                              } else {
-                                                widget.post.celebrate
-                                                    .add(currentUser.email);
-                                              }
-                                              await supaBase
-                                                  .from("Posts")
-                                                  .update(widget.post.toJson())
-                                                  .eq('id', widget.post.id);
-                                              setState(() {});
-                                            },
-                                            child: SizedBox(
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                      height: height * 0.025,
-                                                      child: FittedBox(
-                                                        fit: BoxFit.fitHeight,
-                                                        child: ImageIcon(
-                                                            AssetImage(
-                                                                "assets/images/cellebrate.png"),
-                                                            color: widget.post
-                                                                    .celebrate
-                                                                    .contains(
-                                                                        currentUser
-                                                                            .email)
-                                                                ? blue
-                                                                : Colors.grey
-                                                                    .shade500),
-                                                      )),
-                                                  Container(
-                                                    height: height * 0.035,
-                                                    margin: EdgeInsets.only(
-                                                        left: width * 0.01),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.fitHeight,
-                                                      child: Text(
-                                                        "Celebrate",
-                                                        style:
-                                                            GoogleFonts.fredoka(
-                                                          color: widget
-                                                                  .post.celebrate
-                                                                  .contains(
-                                                                      currentUser
-                                                                          .email)
-                                                              ? blue
-                                                              : Colors
-                                                                  .grey.shade500,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          const Expanded(child: SizedBox()),
-                                          SizedBox(
-                                            child: Row(children: [
-                                              Container(
-                                                  height: height * 0.025,
-                                                  margin: EdgeInsets.only(
-                                                      top: height * 0.005),
-                                                  child: FittedBox(
-                                                    fit: BoxFit.fitHeight,
-                                                    child: ImageIcon(
                                                       AssetImage(
-                                                          "assets/images/chat.png"),
-                                                      color: Colors.grey.shade500,
-                                                    ),
-                                                  )),
-                                              Container(
-                                                height: height * 0.035,
-                                                margin: EdgeInsets.only(
-                                                    left: width * 0.01),
-                                                child: FittedBox(
-                                                  fit: BoxFit.fitHeight,
-                                                  child: Text(
-                                                    "Comments",
-                                                    style: GoogleFonts.fredoka(
-                                                      color: Colors.grey.shade500,
-                                                      fontWeight: FontWeight.w700,
-                                                    ),
+                                                          "assets/images/cellebrate.png"),
+                                                      color: widget.post
+                                                              .celebrate
+                                                              .contains(
+                                                                  currentUser
+                                                                      .email)
+                                                          ? blue
+                                                          : Colors.grey
+                                                              .shade500),
+                                                )),
+                                            Container(
+                                              height: height * 0.035,
+                                              margin: EdgeInsets.only(
+                                                  left: width * 0.01),
+                                              child: FittedBox(
+                                                fit: BoxFit.fitHeight,
+                                                child: Text(
+                                                  "Celebrate",
+                                                  style:
+                                                      GoogleFonts.fredoka(
+                                                    color: widget
+                                                            .post.celebrate
+                                                            .contains(
+                                                                currentUser
+                                                                    .email)
+                                                        ? blue
+                                                        : Colors
+                                                            .grey.shade500,
+                                                    fontWeight:
+                                                        FontWeight.w700,
                                                   ),
                                                 ),
                                               ),
-                                            ]),
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.025,
-                                          ),
-                                        ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    SizedBox(height: height * 0.005),
-                                    Container(
-                                      width: width * 0.87,
-                                      child: Text(widget.post.postTitle,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.fade,
-                                          style: GoogleFonts.fredoka(
-                                              height: 1.15,
-                                              color: blue,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 26)),
+                                    const Expanded(child: SizedBox()),
+                                    SizedBox(
+                                      child: Row(children: [
+                                        Container(
+                                            height: height * 0.025,
+                                            margin: EdgeInsets.only(
+                                                top: height * 0.005),
+                                            child: FittedBox(
+                                              fit: BoxFit.fitHeight,
+                                              child: ImageIcon(
+                                                AssetImage(
+                                                    "assets/images/chat.png"),
+                                                color: Colors.grey.shade500,
+                                              ),
+                                            )),
+                                        Container(
+                                          height: height * 0.035,
+                                          margin: EdgeInsets.only(
+                                              left: width * 0.01),
+                                          child: FittedBox(
+                                            fit: BoxFit.fitHeight,
+                                            child: Text(
+                                              "Comments",
+                                              style: GoogleFonts.fredoka(
+                                                color: Colors.grey.shade500,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
                                     ),
                                     SizedBox(
-                                      height: height * 0.005,
-                                    ),
-                                    Container(
-                                      width: width * 0.87,
-                                      child: Text(
-                                        widget.post.postDescription,
-                                        style: TextStyle(
-                                            color: blue,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.2,
-                                            height: 1.4),
-                                      ),
+                                      width: width * 0.025,
                                     ),
                                   ],
                                 ),
                               ),
+                              SizedBox(height: height * 0.005),
+                              Container(
+                                width: width * 0.87,
+                                child: Text(widget.post.postTitle,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.fade,
+                                    style: GoogleFonts.fredoka(
+                                        height: 1.15,
+                                        color: blue,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 24)),
+                              ),
+                              SizedBox(
+                                height: height * 0.005,
+                              ),
+                              Container(
+                                width: width * 0.87,
+                                child: Text(
+                                  widget.post.postDescription,
+                                  style: TextStyle(
+                                      color: blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.2,
+                                      height: 1.4),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(
                           height: height * 0.0075,
                         ),

@@ -106,14 +106,12 @@ class _ConnectionsScreenState extends State<ConnectionsScreen> {
                               }));
                             },
                             child: Container(
-                              height: height * 0.095,
+                              height: height * 0.092,
                               decoration: BoxDecoration(
-                                color: mainColor,
-                                border: Border.all(
-                                    color: darkGreen, width: width * 0.015),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                              ),
+                                  color: mainColor,
+                                  border: Border.all(
+                                      color: darkGreen, width: width * 0.018),
+                                  borderRadius: BorderRadius.circular(15)),
                               margin: EdgeInsets.only(bottom: height * 0.01),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -161,14 +159,13 @@ class _ConnectionsScreenState extends State<ConnectionsScreen> {
                               }));
                             },
                             child: Container(
-                              height: height * 0.095,
+                              height: height * 0.092,
                               decoration: BoxDecoration(
-                                color: mainColor,
-                                border: Border.all(
-                                    color: darkGreen, width: width * 0.015),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                              ),
+                                  color: mainColor,
+                                  border: Border.all(
+                                      color: darkGreen,
+                                      width: width * 0.018),
+                                  borderRadius: BorderRadius.circular(15)),
                               margin : EdgeInsets.only(bottom: height * 0.01),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -216,14 +213,12 @@ class _ConnectionsScreenState extends State<ConnectionsScreen> {
                               }));
                             },
                             child: Container(
-                              height: height * 0.095,
+                              height: height * 0.092,
                               decoration: BoxDecoration(
-                                color: mainColor,
-                                border: Border.all(
-                                    color: darkGreen, width: width * 0.015),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                              ),
+                                  color: mainColor,
+                                  border: Border.all(
+                                      color: darkGreen, width: width * 0.018),
+                                  borderRadius: BorderRadius.circular(15)),
                               margin:
                                   EdgeInsets.only(bottom: height * 0.0015),
                               child: Row(
