@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:highschoolhub/firebase_options.dart';
+import 'package:highschoolhub/models/school.dart';
+import 'package:highschoolhub/models/user.dart';
 import 'package:highschoolhub/pages/AuthenticationPage.dart';
 import 'package:highschoolhub/pages/SignUp.dart';
 import 'package:highschoolhub/pages/SignUpScreen/createSchoolSpecificClass.dart';
@@ -23,6 +25,8 @@ Future<PostgreSQLConnection> createConnection() async {
   return connection;
 }
 
+Map<String, AppUser> allUsers = {};
+Map<String, Map<String, schoolUserList>> schoolData = {};
 
 Future<void> main() async {
   databaseConnection = await createConnection();
@@ -34,7 +38,34 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  List<Map> data = await supaBase.from("user_auth_table").select();
+  for(Map user in data){
+    AppUser temp = AppUser();
+    temp.fromJson(user);
+    await temp.updateNetworkParameters();
+    print("this is the network");
+    print(temp.email);
+    print(temp.network);
+    allUsers[temp.email] = temp;
+    print(allUsers[temp.email]!.network);
+  }
+  PostgreSQLResult schoolTables = await databaseConnection.query("SELECT table_name FROM information_schema.tables WHERE table_schema='public'");
+  List<String> sqlQuery = [];
+  for(int i = 0; i < schoolTables.length; i++) {
+    if(["Classes", "Clubs", "Skills", "user_auth_table", "MentorPosts", "chats", "Posts"].contains(schoolTables[i][0]) == false){
+      sqlQuery.add(schoolTables[i][0]);
+    }
+  }
+  for(String query in sqlQuery){
+    data = await supaBase.from(query).select();
+    Map<String, schoolUserList> templist = {};
+    for(Map schoolUser in data){
+      print(schoolUser);
+      schoolUserList tempUser = schoolUserList(studentGmail: schoolUser["student_gmail"], year : schoolUser["year"], grade : schoolUser["grade"]);
+      templist[schoolUser["student_gmail"] as String] = tempUser;
+    }
+    schoolData[query] = templist;
+  }
   runApp(MyApp());
 }
 

@@ -6,7 +6,7 @@ import 'package:highschoolhub/pages/AuthenticationPage.dart';
 import 'package:highschoolhub/pages/SignUpScreen/AccountInfo.dart';
 
 class MyProfileScreen extends StatefulWidget {
-  String profileUserEmail;
+  AppUser profileUserEmail;
   MyProfileScreen(this.profileUserEmail);
   @override
   State<MyProfileScreen> createState() => _MyProfileScreenState();
@@ -14,21 +14,33 @@ class MyProfileScreen extends StatefulWidget {
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
-  late AppUser profileUser = AppUser();
+  AppUser profileUser = AppUser();
   bool showFullView = false;
   bool requestSent = false;
   void initStateFunction() async {
-    if(currentUser.requestsSent.contains(widget.profileUserEmail) == false){
-      requestSent = false;
-    }else{
-      requestSent = true;
+    for(AppUser tempUser in currentUser.requestsSent){
+      if(tempUser.email == widget.profileUserEmail.email){
+        requestSent = true;
+      }
     }
-    if (currentUser.network.contains(widget.profileUserEmail) ||
-        widget.profileUserEmail == currentUser.email) {
+    bool showData = false;
+    for(AppUser temp in currentUser.network){
+      if(temp.email == widget.profileUserEmail.email){
+        showData = true;
+        break;
+      }
+    }
+    if (showData ||
+        widget.profileUserEmail.email == currentUser.email) {
       showFullView = true;
     }
-    if (currentUser.email != widget.profileUserEmail)
-      await profileUser.getDataFromDatabase(widget.profileUserEmail);
+    print(requestSent);
+    print("yup here multiple time");
+    print(requestSent);
+    profileUser = widget.profileUserEmail;
+    setState(() {
+      
+    });
   }
 
   void initState() {
@@ -65,290 +77,321 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   SizedBox(
                     height: width * 0.025,
                   ),
-                  requestSent ? 
-                  Container(
-                    height: height * 0.365,
-                    width: width * 0.95,
-                    decoration: BoxDecoration(
-                        color: blue,
-                        border:
-                            Border.all(width: width * 0.015, color: darkblue),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(45),
-                            topRight: Radius.circular(45),
-                            bottomLeft: Radius.circular(25),
-                            bottomRight: Radius.circular(25))),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: height * 0.035,
-                        ),
-                        Container(
-                          height: height * 0.05,
-                          width: width,
-                          child: Row(
-                            children: [
-                              Builder(builder: (context) {
-                                return InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Container(
-                                      height: height * 0.04,
-                                      width: height * 0.04,
-                                      margin:
-                                          EdgeInsets.only(left: width * 0.06),
-                                      child: RotatedBox(quarterTurns: 2, 
-                                      child: ImageIcon(
-                                        AssetImage("assets/images/arrow.png"),
-                                        color: backgroundColor,
-                                      ),),
-                                    ));
-                              }),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: height * 0.16,
-                          width: height * 0.16,
+                  !showFullView
+                      ? Container(
+                          height: height * 0.365,
+                          width: width * 0.95,
                           decoration: BoxDecoration(
+                              color: blue,
                               border: Border.all(
-                                  color: darkblue, width: width * 0.02),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            child: currentUser.image.runtimeType == String
-                                ? Image.network(
-                                    Uri.encodeFull(currentUser.image),
-                                    fit: BoxFit.cover,
-                                    key: UniqueKey(),
-                                  )
-                                : Container(),
-                          ),
-                        ),
-                        Stack(
-                          children: [
-                            Container(
-                              height: height * 0.06,
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: Text(
-                                  currentUser.firstName +
-                                      " " +
-                                      currentUser.lastName,
-                                  style: GoogleFonts.fredoka(
-                                      color: backgroundColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                setState(() {
-                                  requestSent = requestSent == false;
-                                });
-                              },
-                              child: Container(
+                                  width: width * 0.015, color: darkblue),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(45),
+                                  topRight: Radius.circular(45),
+                                  bottomLeft: Radius.circular(25),
+                                  bottomRight: Radius.circular(25))),
+                          child: Column(
+                            children: [
+                              SizedBox(
                                 height: height * 0.035,
-                                width: width * 0.3,
-                                margin: EdgeInsets.only(
-                                    top: height * 0.059, left: width * 0.13),
-                                decoration: BoxDecoration(
-                                  color: requestSent ? blue : backgroundColor, 
-                                  border: Border.all(
-                                    color: requestSent ? darkblue : Colors.grey.shade300, 
-                                    width: width * 0.008
-                                  ), 
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8)
-                                  )
-                                ),
+                              ),
+                              Container(
+                                height: height * 0.05,
+                                width: width,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: 
-                                  requestSent ? 
-                                  [
-                                    Container(
-                                      height: height * 0.03, 
-                                      child: FittedBox(
-                                        fit: BoxFit.fitHeight, 
-                                        child: Text(
-                                          "Pending", 
-                                          style : GoogleFonts.fredoka(
-                                            color: requestSent ? backgroundColor :  blue,
-                                            fontWeight: FontWeight.w600, 
-                                          )
-                                        ),
-                                      ),
-                                    ), 
-                                  ]:
-                                  [
-                                    Container(
-                                      height: height * 0.015, 
-                                      child: 
-                                      ImageIcon(
-                                        AssetImage(
-                                        "assets/images/add_school.png"),
-                                        color: requestSent ? backgroundColor :  blue,
-                                      ),
-                                    ), 
-                                    SizedBox(
-                                      width: width * 0.005,
-                                    ),
-                                    Container(
-                                      height: height * 0.03, 
-                                      child: FittedBox(
-                                        fit: BoxFit.fitHeight, 
-                                        child: Text(
-                                          "Connect", 
-                                          style : GoogleFonts.fredoka(
-                                            color: requestSent ? backgroundColor :  blue,
-                                            fontWeight: FontWeight.w600, 
-                                          )
-                                        ),
-                                      ),
-                                    ), 
-                                    SizedBox(
-                                      width: width * 0.02,
-                                    ),
+                                  children: [
+                                    InkWell(
+                                        onTap: () {
+                                          print("here");
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Container(
+                                          height: height * 0.04,
+                                          width: height * 0.04,
+                                          margin: EdgeInsets.only(
+                                              left: width * 0.06),
+                                          child: RotatedBox(
+                                            quarterTurns: 2,
+                                            child: ImageIcon(
+                                              AssetImage(
+                                                  "assets/images/arrow.png"),
+                                              color: backgroundColor,
+                                            ),
+                                          ),
+                                        )),
                                   ],
                                 ),
                               ),
-                            )
-                           
-                          ],
-                        ), 
-                       
-                      ],
-                    ),
-                  )
-                  : 
-                  Container(
-                    height: height * 0.4,
-                    width: width * 0.95,
-                    decoration: BoxDecoration(
-                        color: blue,
-                        border:
-                            Border.all(width: width * 0.015, color: darkblue),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(45),
-                            topRight: Radius.circular(45),
-                            bottomLeft: Radius.circular(25),
-                            bottomRight: Radius.circular(25))),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: height * 0.035,
-                        ),
-                        Container(
-                          height: height * 0.05,
-                          width: width,
-                          child: Row(
-                            children: [
-                              Builder(builder: (context) {
-                                return InkWell(
-                                    onTap: () {
-                                      Scaffold.of(context).openDrawer();
-                                    },
-                                    child: Container(
-                                      height: height * 0.04,
-                                      width: height * 0.04,
-                                      margin:
-                                          EdgeInsets.only(left: width * 0.06),
-                                      child: RotatedBox(quarterTurns: 2, 
-                                      child: ImageIcon(
-                                        AssetImage("assets/images/arrow.png"),
-                                        color: backgroundColor,
-                                      ),),
-                                    ));
-                              }),
+                              Container(
+                                height: height * 0.16,
+                                width: height * 0.16,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: darkblue, width: width * 0.02),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                  child: profileUser.image.runtimeType == String
+                                      ? Image.network(
+                                          Uri.encodeFull(profileUser.image),
+                                          fit: BoxFit.cover,
+                                          key: UniqueKey(),
+                                        )
+                                      : Container(),
+                                ),
+                              ),
+                              Stack(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: height * 0.06,
+                                        child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Text(
+                                            profileUser.firstName +
+                                                " " +
+                                                profileUser.lastName,
+                                            style: GoogleFonts.fredoka(
+                                                color: backgroundColor,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () async {
+                                          if (requestSent == false) {
+                                            await currentUser.addFriendRequest(widget.profileUserEmail.email);
+                                            requestSent = true;
+                                          } else {
+                                            await currentUser.removeFriendRequest(widget.profileUserEmail.email);
+                                            requestSent = false;
+                                          }
+                                          setState(() {});
+                                        },
+                                        child: Container(
+                                          height: height * 0.035,
+                                          width: width * 0.3,
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.only(
+                                              top: height * 0.061,),
+                                          decoration: BoxDecoration(
+                                              color: requestSent
+                                                  ? blue
+                                                  : backgroundColor,
+                                              border: Border.all(
+                                                  color: requestSent
+                                                      ? darkblue
+                                                      : Colors.grey.shade300,
+                                                  width: width * 0.008),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: requestSent
+                                                ? [
+                                                    Container(
+                                                      height: height * 0.03,
+                                                      child: FittedBox(
+                                                        fit: BoxFit.fitHeight,
+                                                        child: Text("Pending",
+                                                            style:
+                                                                GoogleFonts.fredoka(
+                                                              color: requestSent
+                                                                  ? backgroundColor
+                                                                  : blue,
+                                                              fontWeight:
+                                                                  FontWeight.w600,
+                                                            )),
+                                                      ),
+                                                    ),
+                                                  ]
+                                                : [
+                                                    Container(
+                                                      height: height * 0.015,
+                                                      child: ImageIcon(
+                                                        AssetImage(
+                                                            "assets/images/add_school.png"),
+                                                        color: requestSent
+                                                            ? backgroundColor
+                                                            : blue,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: width * 0.005,
+                                                    ),
+                                                    Container(
+                                                      height: height * 0.03,
+                                                      child: FittedBox(
+                                                        fit: BoxFit.fitHeight,
+                                                        child: Text("Connect",
+                                                            style:
+                                                                GoogleFonts.fredoka(
+                                                              color: requestSent
+                                                                  ? backgroundColor
+                                                                  : blue,
+                                                              fontWeight:
+                                                                  FontWeight.w600,
+                                                            )),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: width * 0.02,
+                                                    ),
+                                                  ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ],
                           ),
-                        ),
-                        Container(
-                          height: height * 0.16,
-                          width: height * 0.16,
+                        )
+                      : Container(
+                          height: height * 0.4,
+                          width: width * 0.95,
                           decoration: BoxDecoration(
+                              color: blue,
                               border: Border.all(
-                                  color: darkblue, width: width * 0.02),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            child: currentUser.image.runtimeType == String
-                                ? Image.network(
-                                    Uri.encodeFull(currentUser.image),
-                                    fit: BoxFit.cover,
-                                    key: UniqueKey(),
-                                  )
-                                : Container(),
-                          ),
-                        ),
-                        Stack(
-                          children: [
-                            Container(
-                              height: height * 0.06,
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: Text(
-                                  currentUser.firstName +
-                                      " " +
-                                      currentUser.lastName,
-                                  style: GoogleFonts.fredoka(
-                                      color: backgroundColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: height * 0.03,
-                              margin: EdgeInsets.only(
-                                  top: height * 0.055, left: width * 0.02),
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: Text(
-                                  currentUser.email,
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.fredoka(
-                                      color: backgroundColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            )
-                          ],
-                        ), 
-                        SizedBox(
-                          height: height * 0.01,
-                        ),
-                        Container(
-                          height: height * 0.03,
-                          width: width * 0.75, 
-                          child: Row(
+                                  width: width * 0.015, color: darkblue),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(45),
+                                  topRight: Radius.circular(45),
+                                  bottomLeft: Radius.circular(25),
+                                  bottomRight: Radius.circular(25))),
+                          child: Column(
                             children: [
-                              Text(
-                                "Grade : " + currentGradeToString( currentUser.currentGrade), 
-                                style: GoogleFonts.fredoka(
-                                  color: backgroundColor, 
-                                  fontWeight: FontWeight.w600, 
-                                  fontSize: 17
+                              SizedBox(
+                                height: height * 0.035,
+                              ),
+                              Container(
+                                height: height * 0.05,
+                                width: width,
+                                child: Row(
+                                  children: [
+                                    Builder(builder: (context) {
+                                      return InkWell(
+                                          onTap: () {
+                                            Scaffold.of(context).openDrawer();
+                                          },
+                                          child: Container(
+                                            height: height * 0.04,
+                                            width: height * 0.04,
+                                            margin: EdgeInsets.only(
+                                                left: width * 0.06),
+                                            child: RotatedBox(
+                                              quarterTurns: 2,
+                                              child: ImageIcon(
+                                                AssetImage(
+                                                    "assets/images/arrow.png"),
+                                                color: backgroundColor,
+                                              ),
+                                            ),
+                                          ));
+                                    }),
+                                  ],
                                 ),
-                              ), 
-                              Expanded(child : Container()),
-                               Text(
-                                "State : " + stateToString(currentUser.userState), 
-                                style: GoogleFonts.fredoka(
-                                  color: backgroundColor, 
-                                  fontWeight: FontWeight.w600, 
-                                  fontSize: 17
+                              ),
+                              Container(
+                                height: height * 0.16,
+                                width: height * 0.16,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: darkblue, width: width * 0.02),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                  child: profileUser.image.runtimeType == String
+                                      ? Image.network(
+                                          Uri.encodeFull(profileUser.image),
+                                          fit: BoxFit.cover,
+                                          key: UniqueKey(),
+                                        )
+                                      : Container(),
+                                ),
+                              ),
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: height * 0.06,
+                                    width: width,
+                                    child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Text(
+                                        profileUser.firstName +
+                                            " " +
+                                            profileUser.lastName,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.fredoka(
+                                            color: backgroundColor,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: height * 0.03,
+                                    width: width,
+                                    margin: EdgeInsets.only(
+                                      top: height * 0.055,
+                                    ),
+                                    child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Text(
+                                        profileUser.email,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.fredoka(
+                                            color: backgroundColor,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: height * 0.01,
+                              ),
+                              Container(
+                                height: height * 0.03,
+                                width: width * 0.75,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Grade : " +
+                                          currentGradeToString(
+                                              profileUser.currentGrade),
+                                      style: GoogleFonts.fredoka(
+                                          color: backgroundColor,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 17),
+                                    ),
+                                    Expanded(child: Container()),
+                                    Text(
+                                      "State : " +
+                                          stateToString(profileUser.userState),
+                                      style: GoogleFonts.fredoka(
+                                          color: backgroundColor,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 17),
+                                    )
+                                  ],
                                 ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
+                        ),
                   SizedBox(
                     height: height * 0.01,
                   ),
@@ -388,11 +431,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 ),
                                 Container(
                                   width: width * 0.9,
-                                  margin:
-                                      EdgeInsets.only(left: width * 0.025),
+                                  margin: EdgeInsets.only(left: width * 0.025),
                                   child: Column(
                                     children: [
-                                      ...currentUser.schools.map((e) {
+                                      ...profileUser.schools.map((e) {
                                         return Container(
                                           width: width * 0.9,
                                           height: height * 0.1,
@@ -419,8 +461,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                             Radius.circular(
                                                                 10)),
                                                     border: Border.all(
-                                                        color:
-                                                            backgroundColor,
+                                                        color: backgroundColor,
                                                         width: width * 0.01)),
                                                 child: ClipRRect(
                                                   borderRadius:
@@ -454,13 +495,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600,
-                                                                    fontSize: e.name.length <= 25
+                                                                    fontSize: e
+                                                                                .name.length <=
+                                                                            25
                                                                         ? MediaQuery.of(context).textScaleFactor *
                                                                             22
                                                                         : MediaQuery.of(context).textScaleFactor *
                                                                             18,
-                                                                    height:
-                                                                        1),
+                                                                    height: 1),
                                                               ),
                                                             ),
                                                           ],
@@ -496,7 +538,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                                       right: width *
                                                                           0.01),
                                                                   decoration: BoxDecoration(
-                                                                      color: (e.attendedGrades.contains(grade))
+                                                                      color: (e.attendedGrades.contains(
+                                                                              grade))
                                                                           ? puprle
                                                                           : backgroundColor,
                                                                       border: Border.all(
@@ -505,9 +548,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                                           width: width *
                                                                               0.008),
                                                                       borderRadius:
-                                                                          BorderRadius.all(Radius.circular(5))),
-                                                                  child:
-                                                                      Center(
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(5))),
+                                                                  child: Center(
                                                                     child:
                                                                         FittedBox(
                                                                       fit: BoxFit
@@ -516,8 +559,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                                           Text(
                                                                         grade
                                                                             .toString(),
-                                                                        style:
-                                                                            GoogleFonts.fredoka(
+                                                                        style: GoogleFonts
+                                                                            .fredoka(
                                                                           color: (e.attendedGrades.contains(grade))
                                                                               ? backgroundColor
                                                                               : darkPurple,
@@ -590,7 +633,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         EdgeInsets.only(left: width * 0.025),
                                     child: ListView(
                                       padding: EdgeInsets.zero,
-                                      children: currentUser.skills.map((e) {
+                                      children: profileUser.skills.map((e) {
                                         return Container(
                                           width: width * 0.9,
                                           height: height * 0.09,
@@ -675,7 +718,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     child: ListView(
                                       padding: EdgeInsets.zero,
                                       children: [
-                                        ...currentUser.clubs.map((e) {
+                                        ...profileUser.clubs.map((e) {
                                           return Stack(
                                             children: [
                                               Container(
@@ -776,31 +819,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                             Expanded(
                                                               child: SizedBox(),
                                                             ),
-                                                            InkWell(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  currentUser
-                                                                      .clubs
-                                                                      .remove(
-                                                                          e);
-                                                                });
-                                                              },
-                                                              child: Container(
-                                                                height: height *
-                                                                    0.035,
-                                                                child:
-                                                                    FittedBox(
-                                                                  fit: BoxFit
-                                                                      .fitHeight,
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .delete,
-                                                                    color:
-                                                                        backgroundColor,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            )
                                                           ],
                                                         ),
                                                       ),
@@ -879,7 +897,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                                     )
                                                                   : Image.network(
                                                                       e.getSchoolImage(
-                                                                          currentUser
+                                                                          profileUser
                                                                               .schools)),
                                                             ),
                                                           ),
@@ -986,7 +1004,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     child: ListView(
                                       padding: EdgeInsets.zero,
                                       children: [
-                                        ...currentUser.classes.map((e) {
+                                        ...profileUser.classes.map((e) {
                                           return Stack(
                                             children: [
                                               Container(

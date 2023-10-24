@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:fl_geocoder/fl_geocoder.dart';
@@ -71,21 +73,15 @@ class _SignUpScreenState extends State<SignUpScreen>
       String schoolName, String formattedName) async {
     String ogName = schoolName;
     String tempSchoolName = schoolName.replaceAll(" ", "+");
-    schoolName = schoolName.replaceAll(" ", "+") + "+Crest";
-    String searchUrl = "https://www.google.com/search?q=" +
-        schoolName +
-        "&tbm=isch&ved=2ahUKEwiCvdaK3KWAAxXwPN4AHW6nCg8Q2-cCegQIABAA&oq=" +
-        schoolName +
-        "&gs_lcp=CgNpbWcQAzoECCMQJzoFCAAQgAQ6CAgAEIAEELEDOggIABCxAxCDAToHCAAQigUQQzoLCAAQgAQQsQMQgwE6BAgAEAM6BwgjEOoCECc6BwgAEBgQgAQ6BggAEAgQHjoECAAQHlDqgQFYg7YBYLG3AWgCcAB4AIABYIgBthOSAQI0NJgBAKABAaoBC2d3cy13aXotaW1nsAEKwAEB&sclient=img&ei=YZS9ZMKIAvD5-LYP7s6qeA&bih=1047&biw=1241";
+    schoolName = "${schoolName.replaceAll(" ", "+")}+Crest";
+    String searchUrl = "https://www.google.com/search?q=$schoolName&tbm=isch&ved=2ahUKEwiCvdaK3KWAAxXwPN4AHW6nCg8Q2-cCegQIABAA&oq=$schoolName&gs_lcp=CgNpbWcQAzoECCMQJzoFCAAQgAQ6CAgAEIAEELEDOggIABCxAxCDAToHCAAQigUQQzoLCAAQgAQQsQMQgwE6BAgAEAM6BwgjEOoCECc6BwgAEBgQgAQ6BggAEAgQHjoECAAQHlDqgQFYg7YBYLG3AWgCcAB4AIABYIgBthOSAQI0NJgBAKABAaoBC2d3cy13aXotaW1nsAEKwAEB&sclient=img&ei=YZS9ZMKIAvD5-LYP7s6qeA&bih=1047&biw=1241";
     Uri url = Uri.parse(searchUrl);
     var response = await http.get(url);
     var document = parser.parse(response.body);
     List<dom.Element> images = document.getElementsByTagName("img");
     String imageURL = images[1].attributes["src"] as String;
     searchUrl =
-        "https://nces.ed.gov/ccd/schoolsearch/school_list.asp?Search=1&InstName=" +
-            tempSchoolName +
-            "&SchoolID=&Address=&City=&State=&Zip=&Miles=&County=&PhoneAreaCode=&Phone=&DistrictName=&DistrictID=&SchoolType=1&SchoolType=2&SchoolType=3&SchoolType=4&SpecificSchlTypes=all&IncGrade=-1&LoGrade=-1&HiGrade=-1";
+        "https://nces.ed.gov/ccd/schoolsearch/school_list.asp?Search=1&InstName=$tempSchoolName&SchoolID=&Address=&City=&State=&Zip=&Miles=&County=&PhoneAreaCode=&Phone=&DistrictName=&DistrictID=&SchoolType=1&SchoolType=2&SchoolType=3&SchoolType=4&SpecificSchlTypes=all&IncGrade=-1&LoGrade=-1&HiGrade=-1";
     url = Uri.parse(searchUrl);
     response = await http.get(url);
     document = parser.parse(response.body);
@@ -93,8 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     for (dom.Element link in actualLinkList) {
       try {
         if (link.attributes["href"]!.contains("school_detail.asp")) {
-          searchUrl = "https://nces.ed.gov/ccd/schoolsearch/" +
-              link.attributes["href"]!;
+          searchUrl = "https://nces.ed.gov/ccd/schoolsearch/${link.attributes["href"]!}";
           break;
         }
       } catch (e) {}
@@ -160,9 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     List finalAnswersList = [];
     String enteredSchool = schoolTec.text;
     String stringUrl =
-        "https://nces.ed.gov/ccd/schoolsearch/school_list.asp?Search=1&InstName=" +
-            enteredSchool.replaceAll(" ", "+") +
-            "&SchoolID=&Address=&City=&State=&Zip=&Miles=&County=&PhoneAreaCode=&Phone=&DistrictName=&DistrictID=&SchoolType=1&SchoolType=2&SchoolType=3&SchoolType=4&SpecificSchlTypes=all&IncGrade=-1&LoGrade=-1&HiGrade=-1";
+        "https://nces.ed.gov/ccd/schoolsearch/school_list.asp?Search=1&InstName=${enteredSchool.replaceAll(" ", "+")}&SchoolID=&Address=&City=&State=&Zip=&Miles=&County=&PhoneAreaCode=&Phone=&DistrictName=&DistrictID=&SchoolType=1&SchoolType=2&SchoolType=3&SchoolType=4&SpecificSchlTypes=all&IncGrade=-1&LoGrade=-1&HiGrade=-1";
     print(stringUrl);
     final url = Uri.parse(stringUrl);
     final response = await http.get(url);
@@ -231,7 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     final result = await supaBase.from("Clubs").select();
     print("getting club data");
     print(result);
-    classes = [];
+    
     clubs = [];
     for (Map data in result) {
       club value = club();
@@ -252,7 +245,7 @@ class _SignUpScreenState extends State<SignUpScreen>
 
   Future<int> getSkillsFromDatabase() async {
     final result = await supaBase.from("Skills").select();
-    classes = [];
+    skills = [];
     for (Map data in result) {
       Skill value = Skill();
       value.fromJSON(data);
@@ -379,6 +372,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     });
   }
 
+  @override
   void initState() {
     initStateFunction();
     super.initState();
@@ -419,6 +413,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     return finalStringList;
   }
 
+  @override
   Widget build(BuildContext context) {
     keyboardUp = MediaQuery.of(context).viewInsets.bottom != 0;
     double height = MediaQuery.of(context).size.height;
@@ -447,11 +442,11 @@ class _SignUpScreenState extends State<SignUpScreen>
               ),
             ),
             SafeArea(
-              child: Container(
+              child: SizedBox(
                 width: width,
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       width: width,
                       height: height * 0.0725,
                       child: Row(
@@ -459,7 +454,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                           SizedBox(
                             width: width * 0.05,
                           ),
-                          Container(
+                          SizedBox(
                             height: height * 0.0725,
                             width: height * 0.0725,
                             child: FloatingActionButton(
@@ -512,7 +507,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                           ),
                           Expanded(child: Container()),
                           InkWell(
-                            child: Container(
+                            child: SizedBox(
                               height: height * 0.0725,
                               child: FittedBox(
                                 child: Text(
@@ -525,7 +520,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                             ),
                           ),
                           Expanded(child: Container()),
-                          Container(
+                          SizedBox(
                             height: height * 0.0725,
                             width: height * 0.0725,
                             child: FloatingActionButton(
@@ -539,8 +534,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     await currentUser.setGeneralData();
                                     Navigator.of(context).popAndPushNamed("HomeScreen");
                                   }
-                                  print("current Screen " +
-                                      currentScreen.toString());
+                                  print("current Screen $currentScreen");
                                   if (currentScreen == 2) {
                                     getClassOptions();
                                   }
@@ -579,7 +573,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       ),
                     ),
                     Expanded(
-                        child: Container(
+                        child: SizedBox(
                       width: width,
                       child: TabBarView(
                         controller: _tabController,
@@ -608,7 +602,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         ],
                       ),
                     )),
-                    Container(
+                    SizedBox(
                       width: width * 0.9,
                       height: height * 0.08,
                       child: Row(
@@ -731,7 +725,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10))),
                                 child: Center(
-                                    child: Container(
+                                    child: SizedBox(
                                         height: height * 0.04,
                                         child: Stack(
                                           children: [
@@ -822,7 +816,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10))),
                                 child: Center(
-                                    child: Container(
+                                    child: SizedBox(
                                         height: height * 0.04,
                                         child: Stack(
                                           children: [
@@ -911,7 +905,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10))),
                                 child: Center(
-                                    child: Container(
+                                    child: SizedBox(
                                         height: height * 0.04,
                                         child: Stack(
                                           children: [
@@ -971,7 +965,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         showSearchSchool();
                         toggleShowBlackScreen();
                       },
-                      child: Container(
+                      child: SizedBox(
                           height: height,
                           width: width,
                           child: Column(
@@ -1011,7 +1005,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                           Positioned(
                                             bottom: height * 0.03,
                                             left: width * 0.12,
-                                            child: Container(
+                                            child: SizedBox(
                                               height: height * 0.2,
                                               child: Lottie.asset(
                                                   "assets/animations/loading.json",
@@ -1021,7 +1015,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                           Positioned(
                                             bottom: height * 0.015,
                                             left: width * 0.17,
-                                            child: Container(
+                                            child: SizedBox(
                                               height: height * 0.04,
                                               child: FittedBox(
                                                 fit: BoxFit.fitHeight,
@@ -1043,7 +1037,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                               Positioned(
                                                 bottom: height * 0.06,
                                                 left: width * 0.25,
-                                                child: Container(
+                                                child: SizedBox(
                                                   height: height * 0.16,
                                                   child: Image.asset(
                                                       "assets/images/empty.png",
@@ -1053,7 +1047,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                               Positioned(
                                                 bottom: height * 0.01,
                                                 left: width * 0.18,
-                                                child: Container(
+                                                child: SizedBox(
                                                   height: height * 0.04,
                                                   child: FittedBox(
                                                     fit: BoxFit.fitHeight,
@@ -1180,7 +1174,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         showClassesPickerVisibility();
                         toggleShowBlackScreen();
                       },
-                      child: Container(
+                      child: SizedBox(
                           height: height,
                           width: width,
                           child: Column(
@@ -1268,7 +1262,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Container(
+                                              SizedBox(
                                                 height: height * 0.035,
                                                 width: height * 0.035,
                                                 child: ImageIcon(
@@ -1311,7 +1305,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         showChooseSchoolForClass();
                         toggleShowBlackScreen();
                       },
-                      child: Container(
+                      child: SizedBox(
                           height: height,
                           width: width,
                           child: Column(
@@ -1409,7 +1403,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                 SizedBox(
                                                   width: width * 0.02,
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   width: width * 0.6,
                                                   child: Text(
                                                     e.name,
@@ -1457,7 +1451,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         showSearchSchool();
                         toggleShowBlackScreen();
                       },
-                      child: Container(
+                      child: SizedBox(
                           height: height,
                           width: width,
                           child: Column(
@@ -1552,7 +1546,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                     SizedBox(
                                                       width: width * 0.013,
                                                     ),
-                                                    Container(
+                                                    SizedBox(
                                                       width: width * 0.65,
                                                       child: Text(
                                                         e.className,
@@ -1674,7 +1668,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                         SizedBox(
                                                           width: width * 0.013,
                                                         ),
-                                                        Container(
+                                                        SizedBox(
                                                           width: width * 0.65,
                                                           child: Text(
                                                             e.className,
@@ -1714,7 +1708,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         showSearchSchool();
                         toggleShowBlackScreen();
                       },
-                      child: Container(
+                      child: SizedBox(
                           height: height,
                           width: width,
                           child: Column(
@@ -1860,7 +1854,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         toggleClubSchoolPicker();
                         toggleShowBlackScreen();
                       },
-                      child: Container(
+                      child: SizedBox(
                           height: height,
                           width: width,
                           child: Column(
@@ -1968,7 +1962,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                 SizedBox(
                                                   width: width * 0.02,
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   width: width * 0.6,
                                                   child: Text(
                                                     e.name,
@@ -2078,6 +2072,7 @@ class SearchSChoolTextField extends StatefulWidget {
   TextEditingController tec;
   Function searchButtonOnTap;
   bool showButton;
+  bool numbersOnly;
   SearchSChoolTextField(
       this.wantedHeight,
       this.wantedWidth,
@@ -2087,7 +2082,7 @@ class SearchSChoolTextField extends StatefulWidget {
       this.textFieldNameWidth,
       this.tec,
       this.searchButtonOnTap,
-      {this.showButton = true});
+      {this.showButton = true, this.numbersOnly = false});
   @override
   State<SearchSChoolTextField> createState() => SearchSChoolTextFieldState();
 }
@@ -2095,19 +2090,22 @@ class SearchSChoolTextField extends StatefulWidget {
 class SearchSChoolTextFieldState extends State<SearchSChoolTextField> {
   @override
   bool tapped = false;
+  @override
   void initState() {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Container(
+    return SizedBox(
       height: widget.wantedHeight * 1.02,
       width: widget.wantedWidth,
       child: Stack(
         children: [
           Positioned(
+            
             bottom: 0,
             child: Container(
                 width: widget.wantedWidth,
@@ -2172,6 +2170,7 @@ class SearchSChoolTextFieldState extends State<SearchSChoolTextField> {
                   fontWeight: FontWeight.w600,
                   color: widget.mainColor,
                   fontSize: MediaQuery.of(context).textScaleFactor * 30),
+              keyboardType: widget.numbersOnly ? TextInputType.number : TextInputType.text,
               cursorColor: widget.mainColor,
               cursorHeight: widget.wantedHeight * 0.5,
               decoration: InputDecoration(border: InputBorder.none),
@@ -2186,7 +2185,7 @@ class SearchSChoolTextFieldState extends State<SearchSChoolTextField> {
                     onTap: () {
                       widget.searchButtonOnTap();
                     },
-                    child: Container(
+                    child: SizedBox(
                       height: widget.wantedHeight * 0.55,
                       child: FittedBox(
                         fit: BoxFit.fitHeight,
@@ -2208,6 +2207,7 @@ class ClassDisplayWidget extends StatelessWidget {
   schoolClassDatabase e;
   ClassDisplayWidget(this.e);
 
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -2250,7 +2250,7 @@ class ClassDisplayWidget extends StatelessWidget {
                       color: e.getColor(),
                     )),
                 SizedBox(width: width * 0.01),
-                Container(
+                SizedBox(
                   width: width * 0.6,
                   child: Text(
                     e.className,

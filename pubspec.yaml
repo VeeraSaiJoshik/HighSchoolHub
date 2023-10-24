@@ -52,6 +52,9 @@ dependencies:
   image_downloader: ^0.31.0
   awesome_dialog: ^3.1.0
   postgres: ^2.6.1
+  easy_localization: ^3.0.3
+  visibility_detector: ^0.4.0+2
+  flutter_svg: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -102,6 +105,9 @@ flutter:
     - python/
     - python/skills/
     - assets/images/clubIcons/
+    - assets/images/mentorIcons/
+    - assets/images/suggestedConnectionsImages/
+    - assets/images/PostTypeImages/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

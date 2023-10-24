@@ -59,25 +59,21 @@ class _SettingScreenState extends State<SettingScreen> {
                         width: width,
                         child: Row(
                           children: [
-                             Builder(
-                              builder: (context) {
-                                return InkWell(
-                                  onTap: (){
-                                     Scaffold.of(context).openDrawer();
+                            Builder(builder: (context) {
+                              return InkWell(
+                                  onTap: () {
+                                    Scaffold.of(context).openDrawer();
                                   },
                                   child: Container(
-                              height: height * 0.04,
-                              width: height * 0.04,
-                              margin: EdgeInsets.only(left: width * 0.06),
-                              child: ImageIcon(
-                                AssetImage("assets/images/menus.png"),
-                                color: backgroundColor,
-                              ),
-                            )
-                                );
-                              }
-                            ),
-                            
+                                    height: height * 0.04,
+                                    width: height * 0.04,
+                                    margin: EdgeInsets.only(left: width * 0.06),
+                                    child: ImageIcon(
+                                      AssetImage("assets/images/menus.png"),
+                                      color: backgroundColor,
+                                    ),
+                                  ));
+                            }),
                           ],
                         ),
                       ),
@@ -91,13 +87,13 @@ class _SettingScreenState extends State<SettingScreen> {
                                 BorderRadius.all(Radius.circular(15))),
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
-                          child: 
-                          currentUser.image.runtimeType == String ?
-                          Image.network(
-                            Uri.encodeFull(currentUser.image),
-                            fit: BoxFit.cover,
-                            key: UniqueKey(),
-                          ):Container(),
+                          child: currentUser.image.runtimeType == String
+                              ? Image.network(
+                                  Uri.encodeFull(currentUser.image),
+                                  fit: BoxFit.cover,
+                                  key: UniqueKey(),
+                                )
+                              : Container(),
                         ),
                       ),
                       Stack(
@@ -124,7 +120,6 @@ class _SettingScreenState extends State<SettingScreen> {
                               fit: BoxFit.fitHeight,
                               child: Text(
                                 currentUser.email,
-                                
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.fredoka(
                                     color: backgroundColor,
@@ -146,16 +141,16 @@ class _SettingScreenState extends State<SettingScreen> {
                     children: [
                       InkWell(
                         onTap: () async {
-                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (c){
-                            return MyProfileScreen(currentUser.email);
-                          })
-                         );
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (c) {
+                            return MyProfileScreen(currentUser);
+                          }));
                         },
                         child: Container(
                           width: width * 0.95,
                           height: height * 0.09,
-                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: width * 0.025),
                           decoration: BoxDecoration(
                             color: mainColor,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -172,8 +167,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 child: FittedBox(
                                   fit: BoxFit.cover,
                                   child: ImageIcon(
-                                    AssetImage(
-                                        "assets/images/view.png"),
+                                    AssetImage("assets/images/view.png"),
                                     color: backgroundColor,
                                   ),
                                 ),
@@ -224,25 +218,28 @@ class _SettingScreenState extends State<SettingScreen> {
                       Container(height: width * 0.025),
                       InkWell(
                         onTap: () async {
-                          await Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
+                          await Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (ctx) {
                             return EditAccountScreen();
                           }));
                           imageCache.clear();
 
                           setState(() {
-                            print(currentUser.image );
-                            currentUser.image = currentUser.image + "?v=${DateTime.now().millisecondsSinceEpoch}";
+                            print(currentUser.image);
+                            currentUser.image = currentUser.image +
+                                "?v=${DateTime.now().millisecondsSinceEpoch}";
                           });
                         },
                         child: Container(
                           width: width * 0.95,
                           height: height * 0.09,
-                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: width * 0.025),
                           decoration: BoxDecoration(
                             color: blue,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
-                            border:
-                                Border.all(color: darkblue, width: width * 0.015),
+                            border: Border.all(
+                                color: darkblue, width: width * 0.015),
                           ),
                           child: Row(
                             children: [
@@ -306,14 +303,16 @@ class _SettingScreenState extends State<SettingScreen> {
                       Container(height: width * 0.025),
                       InkWell(
                         onTap: () async {
-                          var delayV = await Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                          var delayV = await Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (c) {
                             return EditSchoolScreen();
                           }));
                         },
                         child: Container(
                           width: width * 0.95,
                           height: height * 0.09,
-                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: width * 0.025),
                           decoration: BoxDecoration(
                             color: puprle,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -378,21 +377,21 @@ class _SettingScreenState extends State<SettingScreen> {
                             ],
                           ),
                         ),
-                      ), 
+                      ),
                       Container(height: width * 0.025),
                       InkWell(
                         onTap: () async {
-                          var t = await Navigator.of(context).push(
-                            MaterialPageRoute(builder: (builder){
-                              return EditClassScreen();
-                            })
-                          );
+                          var t = await Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (builder) {
+                            return EditClassScreen();
+                          }));
                           setState(() {});
                         },
                         child: Container(
                           width: width * 0.95,
                           height: height * 0.09,
-                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: width * 0.025),
                           decoration: BoxDecoration(
                             color: orange,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -457,21 +456,21 @@ class _SettingScreenState extends State<SettingScreen> {
                             ],
                           ),
                         ),
-                      ), 
+                      ),
                       Container(height: width * 0.025),
                       InkWell(
                         onTap: () async {
-                          var t = Navigator.of(context).push(
-                            MaterialPageRoute(builder: (c){
-                              return EditClubScreen();
-                            })
-                          );
+                          var t = Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (c) {
+                            return EditClubScreen();
+                          }));
                           setState(() {});
                         },
                         child: Container(
                           width: width * 0.95,
                           height: height * 0.09,
-                          margin: EdgeInsets.symmetric(horizontal: width * 0.025),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: width * 0.025),
                           decoration: BoxDecoration(
                             color: mainColor,
                             borderRadius: BorderRadius.all(Radius.circular(18)),

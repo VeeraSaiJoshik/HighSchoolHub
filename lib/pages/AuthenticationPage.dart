@@ -9,7 +9,11 @@ import 'package:highschoolhub/pages/SignUp.dart';
 import 'package:highschoolhub/models/uplading.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:postgres/postgres.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../main.dart';
+import '../models/school.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
@@ -17,13 +21,51 @@ class AuthenticationScreen extends StatefulWidget {
   @override
   State<AuthenticationScreen> createState() => _AuthenticationScreenState();
 }
+
 late AppUser currentUser;
+
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
   @override
-  
   bool loadingState = false;
+  
+  void initStateFunction() async {
+    print("gathering the data");
+    List<Map> data = await supaBase.from("user_auth_table").select();
+    for (Map user in data) {
+      AppUser temp = AppUser();
+      temp.fromJson(user);
+      await temp.updateNetworkParameters();
+      allUsers[temp.email] = temp;
+    }
+    PostgreSQLResult schoolTables = await databaseConnection.query(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema='public'");
+    List<String> sqlQuery = [];
+    for (int i = 0; i < schoolTables.length; i++) {
+      if (["Classes", "Clubs", "Skills", "user_auth_table", "MentorPosts", "chats", "Posts"]
+              .contains(schoolTables[i][0]) ==
+          false) {
+        sqlQuery.add(schoolTables[i][0]);
+      }
+    }
+    for (String query in sqlQuery) {
+      data = await supaBase.from(query).select();
+      Map<String, schoolUserList> templist = {};
+      for (Map schoolUser in data) {
+        print(schoolUser);
+        print(schoolUser["year"]);
+        schoolUserList tempUser = schoolUserList(
+            studentGmail: schoolUser["student_gmail"],
+            year: schoolUser["year"],
+            grade: schoolUser["grade"]);
+        templist[schoolUser["student_gmail"] as String] = tempUser;
+      }
+      schoolData[query] = templist;
+    }
+  }
+
   void initState() {
     currentUser = AppUser(schools: []);
+    initStateFunction();
     super.initState();
   }
 
@@ -60,8 +102,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       alignment: Alignment.center,
                       children: [
                         InkWell(
-                          onTap: (){
-                          },
+                          onTap: () {},
                           child: Lottie.asset(
                             "assets/animations/student.json",
                             height: height * 0.43,
@@ -209,9 +250,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                             Navigator.of(context).popAndPushNamed(
                                 "SignUpScreen",
                                 arguments: [currentUser]);
-                          }else{
+                          } else {
                             print("done");
-                            await currentUser.getDataFromDatabase(currentUser.userData!.email!);
+                            await currentUser.getDataFromDatabase(
+                                currentUser.userData!.email!);
                             print("done");
                             Navigator.of(context).popAndPushNamed("HomeScreen");
                           }
@@ -230,33 +272,24 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                                 BorderRadius.all(Radius.circular(15))),
                         child: Row(
                           children: [
-                            SizedBox(
-                              width: (height * 0.09 -
-                                      height * 0.015 -
-                                      height * 0.045) /
-                                  2,
-                            ),
-                            Container(
-                              height: height * 0.045,
-                              child: Image.asset(
-                                "assets/images/google.png",
-                                fit: BoxFit.fitHeight,
-                              ),
-                            ),
-                            SizedBox(
-                              width: width * 0.037,
+                            
+                            Expanded(
+                              child: SizedBox(),
                             ),
                             Container(
                               height: height * 0.06,
                               child: FittedBox(
                                 fit: BoxFit.fitHeight,
                                 child: Text(
-                                  "Google Log In",
+                                  "Log In",
                                   style: GoogleFonts.fredoka(
                                       color: backgroundColor,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ),
+                            ),
+                            Expanded(
+                              child: SizedBox(),
                             ),
                           ],
                         ),
@@ -348,7 +381,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                               child: FittedBox(
                                 fit: BoxFit.fitHeight,
                                 child: Text(
-                                  "Create Account",
+                                  "Setup Account",
                                   style: GoogleFonts.fredoka(
                                       color: backgroundColor,
                                       fontWeight: FontWeight.w600),
@@ -377,4 +410,3 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     );
   }
 }
-

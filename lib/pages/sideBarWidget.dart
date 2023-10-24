@@ -4,7 +4,7 @@ import 'package:highschoolhub/globalInfo.dart';
 import 'package:highschoolhub/models/user.dart';
 import 'package:highschoolhub/pages/AuthenticationPage.dart';
 
-enum Screen { Setting, Sign_Out, Home, connections }
+enum Screen { Setting, Sign_Out, Home, connections, mentorScreen }
 
 class SideBarWidget extends StatefulWidget {
   Screen currentScreen;
@@ -160,6 +160,22 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           blue, 
                         ),
                         SideBarOptionWidget(
+                          "assets/images/Connections.png", 
+                          "Connections", 
+                          widget.currentScreen, 
+                          Screen.connections, 
+                          widget.changeCurrentScreen, 
+                          mainColor
+                        ), 
+                        SideBarOptionWidget(
+                          "assets/images/mentor.png", 
+                          "Mentors", 
+                          widget.currentScreen, 
+                          Screen.mentorScreen, 
+                          widget.changeCurrentScreen, 
+                          orange
+                        ), 
+                        SideBarOptionWidget(
                           "assets/images/setting.png", 
                           "Settings", 
                           widget.currentScreen, 
@@ -167,14 +183,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           widget.changeCurrentScreen, 
                           puprle
                         ), 
-                        SideBarOptionWidget(
-                          "assets/images/Connections.png", 
-                          "Connections", 
-                          widget.currentScreen, 
-                          Screen.connections, 
-                          widget.changeCurrentScreen, 
-                          mainColor
-                        )
                       ],
                     ),
                   ),
@@ -184,7 +192,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     await currentUser.signOut();
                     currentUser = AppUser();
                     Navigator.of(context)
-                        .popAndPushNamed("authenticationScreen");
+                        .pushNamedAndRemoveUntil("authenticationScreen", (Route<dynamic> route) => false,);
                   },
                   child: Container(
                     width: width * 0.67,

@@ -4,7 +4,9 @@ import 'package:highschoolhub/globalInfo.dart';
 import 'package:highschoolhub/pages/AuthenticationPage.dart';
 import 'package:highschoolhub/pages/home/connectionsScreen.dart';
 import 'package:highschoolhub/pages/home/homeScreen.dart';
-import 'package:highschoolhub/pages/home/settingScreen.dart';
+import 'package:highschoolhub/pages/home/settingsScreen.dart';
+import 'package:highschoolhub/pages/mentor/mentorScreen.dart';
+import 'package:highschoolhub/pages/mentor/mentorsSearchScreen.dart';
 import 'package:highschoolhub/pages/sideBarWidget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,6 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     else if(cs == Screen.connections){
       return ConnectionsScreen();
+    }
+    else if(cs == Screen.mentorScreen){
+      return MentorScreen();
     }
     else{
       return SettingScreen();
