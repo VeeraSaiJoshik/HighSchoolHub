@@ -1,9 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:highschoolhub/home/postDetailScreen.dart';
+import 'package:highschoolhub/models/filter.dart';
+import 'package:highschoolhub/pages/homeFeedScreen/createPostScreen.dart';
+import 'package:highschoolhub/pages/homeFeedScreen/postDetailScreen.dart';
 import 'package:highschoolhub/main.dart';
 import 'package:highschoolhub/models/publicPost.dart';
+import 'package:highschoolhub/pages/homeFeedScreen/postFilterScreen.dart';
 import 'package:highschoolhub/pages/profileScreen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,6 +23,7 @@ class HomeScreenWidget extends StatefulWidget {
 class _HomeScreenWidgetState extends State<HomeScreenWidget> {
   @override
   List<PublicPost> allPublicPost = [];
+  List<PublicPost> displayPublicPost = [];
   void initStateFunction() {
     print("here");
     supaBase
@@ -32,20 +36,60 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
         allPublicPost.add(temp);
       }
       print(allPublicPost);
+      for(PublicPost temp in allPublicPost){
+        temp.getGScore(postNameTec.text);
+        print(temp.gScore);
+      }
+      displayPublicPost = [];
+      displayPublicPost.addAll(allPublicPost);
+      displayPublicPost.sort((a, b){
+        return a.gScore.compareTo(b.gScore);
+      });
       setState(() {});
     });
   }
+  void getPostData() async {
+    allPublicPost = [];
+    List data = await supaBase.from("Posts").select();
+    for(Map temp in data){
+      PublicPost tempPost = PublicPost();
+      tempPost.fromJson(temp);
+      allPublicPost.add(tempPost);
+    }
 
+    for(PublicPost temp in allPublicPost){
+      temp.getGScore(postNameTec.text);
+      print(temp.gScore);
+    }
+    displayPublicPost = [];
+    displayPublicPost.addAll(allPublicPost);
+    displayPublicPost.sort((a, b){
+      return a.gScore.compareTo(b.gScore);
+    });
+    setState(() {});
+  }
+  TextEditingController postNameTec = TextEditingController();
   void initState() {
     initStateFunction();
+    postNameTec.addListener((){
+      for(PublicPost temp in allPublicPost){
+        temp.getGScore(postNameTec.text);
+        print(temp.gScore);
+      }
+      displayPublicPost = [];
+      displayPublicPost.addAll(allPublicPost);
+      displayPublicPost.sort((a, b){
+        return a.gScore.compareTo(b.gScore);
+      });
+      setState(() {});
+    });
+
     super.initState();
   }
-
+  PostFilter filter = PostFilter();
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    TextEditingController poastNameTec = TextEditingController();
-
     return SafeArea(
         top: true,
         bottom: false,
@@ -130,7 +174,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                       height: height * 0.062,
                       width: width * 0.78,
                       child: TextField(
-                        controller: poastNameTec,
+                        controller: postNameTec,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(
@@ -165,50 +209,62 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                   padding: EdgeInsets.zero,
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Container(
-                      height: height * 0.013,
-                      width: width * 0.25,
-                      decoration: BoxDecoration(
-                          color: blue,
-                          borderRadius: BorderRadius.circular(5),
-                          border:
-                              Border.all(color: darkblue, width: width * 0.01)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: SizedBox(),
-                          ),
-                          Container(
-                            margin:
-                                EdgeInsets.symmetric(vertical: height * 0.005),
-                            child: FittedBox(
-                              fit: BoxFit.fitHeight,
-                              child: ImageIcon(
-                                AssetImage("assets/images/add_school.png"),
-                                color: backgroundColor,
+                    InkWell(
+                      onTap: () async {
+                        var del = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (c){
+                              return PostFilterScreen(filter);
+                            }
+                          )
+                        );
+                        setState((){});
+                      },
+                      child: Container(
+                        height: height * 0.013,
+                        width: width * 0.25,
+                        decoration: BoxDecoration(
+                            color: blue,
+                            borderRadius: BorderRadius.circular(5),
+                            border:
+                                Border.all(color: darkblue, width: width * 0.01)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                            Container(
+                              margin:
+                                  EdgeInsets.symmetric(vertical: height * 0.005),
+                              child: FittedBox(
+                                fit: BoxFit.fitHeight,
+                                child: ImageIcon(
+                                  AssetImage("assets/images/add_school.png"),
+                                  color: backgroundColor,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: width * 0.015,
-                          ),
-                          Container(
-                            height: height * 0.09,
-                            child: FittedBox(
-                              fit: BoxFit.fitHeight,
-                              child: Text(
-                                "Filters",
-                                style: GoogleFonts.fredoka(
-                                    color: backgroundColor,
-                                    fontWeight: FontWeight.w600),
+                            SizedBox(
+                              width: width * 0.015,
+                            ),
+                            Container(
+                              height: height * 0.09,
+                              child: FittedBox(
+                                fit: BoxFit.fitHeight,
+                                child: Text(
+                                  "Filters",
+                                  style: GoogleFonts.fredoka(
+                                      color: backgroundColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: SizedBox(),
-                          ),
-                        ],
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -223,45 +279,55 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                     child: ListView(
                       padding: EdgeInsets.zero,
                       children: [
-                        Container(
-                          width: width * 0.94,
-                          height: height * 0.09,
-                          decoration: BoxDecoration(
-                              color: blue,
-                              border: Border.all(
-                                  color: darkblue, width: width * 0.0175),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: height * 0.0425,
-                                child: FittedBox(
-                                  fit: BoxFit.fitHeight,
-                                  child: ImageIcon(
-                                    AssetImage("assets/images/createPost.png"),
-                                    color: backgroundColor,
+                        InkWell(
+                          onTap: () async {
+                            var dela = await Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                              return CreatePostScreen();
+                            }));
+                            getPostData();
+                          },
+                          child: Container(
+                            width: width * 0.94,
+                            height: height * 0.09,
+                            decoration: BoxDecoration(
+                                color: blue,
+                                border: Border.all(
+                                    color: darkblue, width: width * 0.0175),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: height * 0.0425,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: ImageIcon(
+                                      AssetImage("assets/images/createPost.png"),
+                                      color: backgroundColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: width * 0.02,
-                              ),
-                              Container(
-                                height: height * 0.053,
-                                child: FittedBox(
-                                    fit: BoxFit.fitHeight,
-                                    child: Text(
-                                      "Create Post",
-                                      style: GoogleFonts.fredoka(
-                                          color: backgroundColor,
-                                          fontWeight: FontWeight.w700),
-                                    )),
-                              )
-                            ],
+                                SizedBox(
+                                  width: width * 0.02,
+                                ),
+                                Container(
+                                  height: height * 0.053,
+                                  child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Text(
+                                        "Create Post",
+                                        style: GoogleFonts.fredoka(
+                                            color: backgroundColor,
+                                            fontWeight: FontWeight.w700),
+                                      )),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                        ...allPublicPost.map((e) {
+                        ...(postNameTec.text.isEmpty ? allPublicPost : displayPublicPost).map((e) {
+                          if(postNameTec.text.isNotEmpty && e.gScore == 0) return Container();
+                          if(filter.passesFilter(e) == false) return Container();
                           return InkWell(
                             onTap: () {
                               Navigator.of(context)
@@ -272,7 +338,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                             child: Container(
                               width: width * 0.94,
                               padding: EdgeInsets.all(width * 0.008),
-                              margin: EdgeInsets.only(top: height * 0.005),
+                              margin: EdgeInsets.only(top: height * 0.0075),
                               decoration: BoxDecoration(
                                   color: blue,
                                   border: Border.all(
@@ -374,18 +440,23 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                       currentUser.userEmailInMyConnectionList(
                                               e.author!.email)
                                           ? Container()
-                                          : Container(
-                                              height: height * 0.025,
-                                              child: FittedBox(
-                                                fit: BoxFit.fitHeight,
-                                                child: ImageIcon(
-                                                    AssetImage(
-                                                        "assets/images/link.png"),
-                                                    color: backgroundColor),
+                                          : InkWell(
+                                            onTap: () async {
+                                              await currentUser.addFriendRequest(e.author!.email);
+                                            },
+                                            child: Container(
+                                                height: height * 0.025,
+                                                child: FittedBox(
+                                                  fit: BoxFit.fitHeight,
+                                                  child: ImageIcon(
+                                                      AssetImage(
+                                                          "assets/images/link.png"),
+                                                      color: backgroundColor),
+                                                ),
                                               ),
-                                            ),
+                                          ),
                                       SizedBox(
-                                        width: width * 0.045,
+                                        width: width * 0.025,
                                       )
                                     ],
                                   ),

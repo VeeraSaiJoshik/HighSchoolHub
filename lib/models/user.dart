@@ -408,8 +408,9 @@ class AppUser {
 
   double getCorpusRatingFromQuery(String query) {
     double score = 0;
-    String currentQuery = "";
     gScore = 0;
+    print("name corpus ${firstName} ${query}");
+    print(getCorpusRatingFromQueryAndText(query, firstName));
     if (getCorpusRatingFromQueryAndText(query, firstName) > gScore)
       gScore = getCorpusRatingFromQueryAndText(query, firstName);
     if (getCorpusRatingFromQueryAndText(query, lastName) > gScore)
@@ -418,7 +419,7 @@ class AppUser {
       gScore = getCorpusRatingFromQueryAndText(query, firstName + lastName);
     if (getCorpusRatingFromQueryAndText(query, lastName + firstName) > gScore)
       gScore = getCorpusRatingFromQueryAndText(query, lastName + firstName);
-    return score;
+    return gScore;
   }
 
   List removeEmailElement(List data, String email) {

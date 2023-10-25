@@ -274,7 +274,7 @@ class _MentorFilterScreenState extends State<MentorFilterScreen> {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(35))),
                           child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(
                                   height: height * 0.025,

@@ -24,7 +24,7 @@ import 'package:convert/convert.dart';
 import 'package:highschoolhub/models/user.dart';
 import 'package:image_picker/image_picker.dart';
 
-enum PostType { Tournament, Volounteer, Collaborate, Other, None }
+enum PostType { Tournament, Volunteer, Collaborate, Other, None }
 
 List<topicSubjects> subjectList = [
     topicSubjects(
@@ -81,7 +81,7 @@ class Range {
 PostType PostTypeFromJson(String postType) {
   
   if (postType == "PostType.Tournament") return PostType.Tournament;
-  if (postType == "PostType.Volounteer") return PostType.Volounteer;
+  if (postType == "PostType.Volunteer") return PostType.Volunteer;
   if (postType == "PostType.Collaborate") return PostType.Collaborate;
   return PostType.Other;
 }
@@ -150,7 +150,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             lastDate: DateTime(2050))
         .then((value) {
       if (value != null) {
-        if (thisPost.type == PostType.Volounteer) {
+        if (thisPost.type == PostType.Volunteer) {
           datePickedForVolunteer = true;
           thisPost.volunteerDate = value;
         }
@@ -1033,13 +1033,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                         ),
                                         PostTypeWidget(
                                           isActive: thisPost.type ==
-                                              PostType.Volounteer,
+                                              PostType.Volunteer,
                                           imageAddress: "volunteer",
-                                          postName: "Volounteer",
+                                          postName: "Volunteer",
                                           onClickFunction: () {
                                             setState(() {
                                               thisPost.type =
-                                                  PostType.Volounteer;
+                                                  PostType.Volunteer;
                                             });
                                           },
                                         ),
@@ -1047,7 +1047,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                     ),
                                   ),
                                   //! volunteer parameters
-                                  thisPost.type == PostType.Volounteer
+                                  thisPost.type == PostType.Volunteer
                                       ? Container(
                                           child: Column(
                                             children: [
@@ -3937,7 +3937,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                         List coordinates = await  performGeoCoding(thisPost.tournamentLocation.address);
                                         thisPost.tournamentLocation.lat = coordinates[0];
                                         thisPost.tournamentLocation.lon = coordinates[1];
-                                      }else if(thisPost.type == PostType.Volounteer && thisPost.volunteerLocation.address != ""){
+                                      }else if(thisPost.type == PostType.Volunteer && thisPost.volunteerLocation.address != ""){
                                         List coordinates = await  performGeoCoding(thisPost.volunteerLocation.address);
                                         thisPost.volunteerLocation.lat = coordinates[0];
                                         thisPost.tournamentLocation.lon = coordinates[1];

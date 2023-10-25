@@ -1,7 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:flutter/material.dart';
-import 'package:highschoolhub/home/createPostScreen.dart';
+import 'package:highschoolhub/pages/homeFeedScreen/createPostScreen.dart';
 import 'package:highschoolhub/models/class.dart';
 import 'package:highschoolhub/models/club.dart';
 import 'package:highschoolhub/models/filter.dart';
@@ -69,7 +69,9 @@ class PublicPost {
   double getGScore(String query) {
     gScore = 0;
     // compare author
-    gScore += author!.getCorpusRatingFromQuery(query) * 0.5;
+    gScore += author!.getCorpusRatingFromQuery(query.toLowerCase())/1000;
+    print("after processing");
+    print(gScore);
     // compare title,
     if (postTitle.toLowerCase().contains(query.toLowerCase())) {
       gScore += query.length * 2;
@@ -102,7 +104,7 @@ class PublicPost {
           gScore += query.length;
         }
       }
-    }else if (type == PostType.Volounteer) {
+    }else if (type == PostType.Volunteer) {
       for (topicSubjects t in volunteerTopics) {
         if (t.clubTypeString.toLowerCase().contains(query.toLowerCase())) {
           gScore += t.clubTypeString.length;
@@ -126,18 +128,29 @@ class PublicPost {
       }
     }
     // compare location
-    if(type == PostType.Volounteer){
-      
+    if(type == PostType.Volunteer){
+     if(volunteerLocation.address.toLowerCase().contains(query.toLowerCase())){
+      gScore += query.length;
+     } 
+    }else if(type == PostType.Tournament){
+      if(tournamentLocation.address.toLowerCase().contains(query.toLowerCase())){
+        gScore += query.length;
+      }
     }
-    // compare tagged schools
-    // compare tagged classes
+    for(School s in taggedSchools){
+      if(s.name.toLowerCase().contains(query.toLowerCase())) gScore += query.length;
+    }
+    for ( schoolClassDatabase scd in taggedClasses) {
+      if (scd.className.toLowerCase().contains(query.toLowerCase()))
+        gScore += query.length;
+    }
     return gScore;
   }
 
   List<topicSubjects> getTypeList() {
     if (type == PostType.Tournament)
       return tournamentTopics;
-    else if (type == PostType.Volounteer)
+    else if (type == PostType.Volunteer)
       return volunteerTopics;
     else if (type == PostType.Collaborate) return collaborationTopic;
     return otherTopic;
@@ -336,7 +349,7 @@ class PublicPost {
 
     author = AppUser();
     author!.fromJson(data["author"]);
-    if (type == PostType.Volounteer) {
+    if (type == PostType.Volunteer) {
       volunteerFromTime = stringToTimeOfDay(data["volunteerFromTime"]);
       volunteerToTime = stringToTimeOfDay(data["volunteerToTime"]);
       volunteerDate = DateTime.parse(data["volunteerDate"]);

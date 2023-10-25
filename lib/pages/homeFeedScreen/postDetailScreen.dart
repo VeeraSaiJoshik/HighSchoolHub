@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highschoolhub/globalInfo.dart';
-import 'package:highschoolhub/home/commentDetailScreen.dart';
-import 'package:highschoolhub/home/createPostScreen.dart';
+import 'package:highschoolhub/pages/homeFeedScreen/commentDetailScreen.dart';
+import 'package:highschoolhub/pages/homeFeedScreen/createPostScreen.dart';
 import 'package:highschoolhub/main.dart';
 import 'package:highschoolhub/models/publicPost.dart';
 import 'package:highschoolhub/models/reply.dart';
@@ -472,7 +472,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                           widget.post.type == PostType.Tournament
                                               ? "Tournament Type :"
                                               : widget.post.type ==
-                                                      PostType.Volounteer
+                                                      PostType.Volunteer
                                                   ? "Volunteer Type :"
                                                   : widget.post.type ==
                                                           PostType.Collaborate
@@ -800,7 +800,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                           ],
                                         ),
                                       )
-                                    : widget.post.type == PostType.Volounteer
+                                    : widget.post.type == PostType.Volunteer
                                         ? Container(
                                             child: Column(
                                             children: [
