@@ -24,6 +24,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
   @override
   List<PublicPost> allPublicPost = [];
   List<PublicPost> displayPublicPost = [];
+  bool viewMyPosts = false;
   void initStateFunction() {
     print("here");
     supaBase
@@ -205,9 +206,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
               Container(
                 height: height * 0.037,
                 width: width * 0.94,
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  scrollDirection: Axis.horizontal,
+                child: Row(
                   children: [
                     InkWell(
                       onTap: () async {
@@ -221,7 +220,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                         setState((){});
                       },
                       child: Container(
-                        height: height * 0.013,
+                        height: height * 0.037,
                         width: width * 0.25,
                         decoration: BoxDecoration(
                             color: blue,
@@ -263,10 +262,50 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                             Expanded(
                               child: SizedBox(),
                             ),
+                            
                           ],
                         ),
                       ),
-                    )
+                    ), 
+                    Expanded(child: Container(),),
+                    InkWell(
+                      onTap: () async {
+                        viewMyPosts = viewMyPosts == false;
+                        setState(() {});
+                      },
+                      child: Container(
+                        height: height * 0.037,
+                        width: width * 0.38,
+                        decoration: BoxDecoration(
+                            color: blue,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                                color: darkblue, width: width * 0.01)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                            Container(
+                              height: height * 0.09,
+                              child: FittedBox(
+                                fit: BoxFit.fitHeight,
+                                child: Text(
+                                  viewMyPosts ? "View All Posts" : "View My Posts",
+                                  style: GoogleFonts.fredoka(
+                                      color: backgroundColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ), 
                   ],
                 ),
               ),
@@ -328,6 +367,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                         ...(postNameTec.text.isEmpty ? allPublicPost : displayPublicPost).map((e) {
                           if(postNameTec.text.isNotEmpty && e.gScore == 0) return Container();
                           if(filter.passesFilter(e) == false) return Container();
+                          if(viewMyPosts && e.author!.email != currentUser.email) return Container();
                           return InkWell(
                             onTap: () {
                               Navigator.of(context)

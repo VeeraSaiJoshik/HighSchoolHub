@@ -1,0 +1,2 @@
+- Create the algorithm foir recommendation
+- Creat th thing that lets you see all your posts

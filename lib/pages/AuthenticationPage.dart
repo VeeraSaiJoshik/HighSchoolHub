@@ -27,7 +27,7 @@ late AppUser currentUser;
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
   @override
   bool loadingState = false;
-  
+
   void initStateFunction() async {
     print("gathering the data");
     List<Map> data = await supaBase.from("user_auth_table").select();
@@ -41,8 +41,15 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         "SELECT table_name FROM information_schema.tables WHERE table_schema='public'");
     List<String> sqlQuery = [];
     for (int i = 0; i < schoolTables.length; i++) {
-      if (["Classes", "Clubs", "Skills", "user_auth_table", "MentorPosts", "chats", "Posts"]
-              .contains(schoolTables[i][0]) ==
+      if ([
+            "Classes",
+            "Clubs",
+            "Skills",
+            "user_auth_table",
+            "MentorPosts",
+            "chats",
+            "Posts"
+          ].contains(schoolTables[i][0]) ==
           false) {
         sqlQuery.add(schoolTables[i][0]);
       }
@@ -272,7 +279,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                                 BorderRadius.all(Radius.circular(15))),
                         child: Row(
                           children: [
-                            
                             Expanded(
                               child: SizedBox(),
                             ),

@@ -765,15 +765,15 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                                           ),
                                         ),
                                   SizedBox(
-                                    width: width * 0.035,
+                                    width: width * 0.04,
                                   ),
                                   Container(
-                                    width: width * 0.64,
+                                    width: width * 0.6,
                                     child: FittedBox(
                                       fit: BoxFit.fitHeight,
                                       child: Text(
                                         imageUrl == ""
-                                            ? "Connect Google"
+                                            ? "Select Email"
                                             : widget
                                                 .currentUser.userData!.email!,
                                         style: GoogleFonts.fredoka(

@@ -399,7 +399,7 @@ class Filter {
     print("passed skill check");
     //check grades
     print(user.currentGrade);
-    if (grades.contains(user.currentGrade) == false) {
+    if (grades.contains(user.currentGrade) == false && grades.isNotEmpty) {
       return false;
     }
     print("passed grades check");

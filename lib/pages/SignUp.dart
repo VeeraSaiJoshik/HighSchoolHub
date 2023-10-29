@@ -233,7 +233,7 @@ class _SignUpScreenState extends State<SignUpScreen>
       for (School s in currentUser.schools) {
         if (value.schoolContained(s.name)) flag = true;
       }
-      if (flag) {
+      if (true) {
         print(data["type"]);
         clubs.add(value);
         print(value.className);
@@ -1108,6 +1108,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                       searchResultsLoading =
                                                           false;
                                                     });
+                                                    showSearchSchool();
+                                                    toggleShowBlackScreen();
                                                   },
                                                   child: Container(
                                                       width: width * 0.85,
@@ -1500,6 +1502,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                 temp.setClubData(e);
                                                 currentUser.clubs.add(temp);
                                                 setState(() {});
+                                                toggleShowBlackScreen();
+                                                toggleClubSearchScreen();
                                               },
                                               child: Container(
                                                 width: width * 0.85,
@@ -1612,7 +1616,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                                         clubAppData();
                                                     temp.setClubData(e);
                                                     currentUser.clubs.add(temp);
-                                                    setState(() {});
+                                                    toggleClubSearchScreen();
                                                   },
                                                   child: Container(
                                                     width: width * 0.85,

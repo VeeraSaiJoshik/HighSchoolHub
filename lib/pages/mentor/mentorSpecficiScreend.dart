@@ -825,7 +825,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                   AssetImage(
                                                       "assets/images/star.png"),
                                                   color: widget.mentor.rating >=
-                                                          1
+                                                          2
                                                       ? Color(0xffFFC300)
                                                       : Colors.grey.shade400,
                                                 ),
@@ -841,7 +841,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                           "assets/images/star.png"),
                                                       color: widget.mentor
                                                                   .rating >=
-                                                              1
+                                                              2
                                                           ? Color(0xffFFD700)
                                                           : Colors
                                                               .grey.shade400,
@@ -863,7 +863,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                   AssetImage(
                                                       "assets/images/star.png"),
                                                   color: widget.mentor.rating >=
-                                                          1
+                                                          3
                                                       ? Color(0xffFFC300)
                                                       : Colors.grey.shade400,
                                                 ),
@@ -879,7 +879,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                           "assets/images/star.png"),
                                                       color: widget.mentor
                                                                   .rating >=
-                                                              1
+                                                              3
                                                           ? Color(0xffFFD700)
                                                           : Colors
                                                               .grey.shade400,
@@ -901,7 +901,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                   AssetImage(
                                                       "assets/images/star.png"),
                                                   color: widget.mentor.rating >=
-                                                          1
+                                                          4
                                                       ? Color(0xffFFC300)
                                                       : Colors.grey.shade400,
                                                 ),
@@ -917,7 +917,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                           "assets/images/star.png"),
                                                       color: widget.mentor
                                                                   .rating >=
-                                                              1
+                                                             4
                                                           ? Color(0xffFFD700)
                                                           : Colors
                                                               .grey.shade400,
@@ -939,7 +939,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                   AssetImage(
                                                       "assets/images/star.png"),
                                                   color: widget.mentor.rating >=
-                                                          1
+                                                          5
                                                       ? Color(0xffFFC300)
                                                       : Colors.grey.shade400,
                                                 ),
@@ -955,7 +955,7 @@ class _MentorDetailScreenState extends State<MentorDetailScreen> {
                                                           "assets/images/star.png"),
                                                       color: widget.mentor
                                                                   .rating >=
-                                                              1
+                                                              5
                                                           ? Color(0xffFFD700)
                                                           : Colors
                                                               .grey.shade400,
